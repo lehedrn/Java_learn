@@ -11,6 +11,7 @@
 
     <modules>
         <module>juc</module>
+        <module>mykit-concurrent-principle</module>
     </modules>
     
     <packaging>pom</packaging>
