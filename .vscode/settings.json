@@ -1,4 +1,5 @@
 {
+    "java.jdt.ls.java.home": "/usr/local/java/jdk1.8.0_461",
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.format.settings.url": ".vscode/java-formatter.xml",
     "java.dependency.packagePresentation": "hierarchical"
