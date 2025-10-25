@@ -16,8 +16,15 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <jol-core.version>0.11</jol-core.version>
     </properties>
     <dependencies>
+        <!-- JOL工具包能够比较精确地分析对象在JVM中的结构，也能够计算某个对象的大小 -->
+        <dependency>
+            <groupId>org.openjdk.jol</groupId>
+            <artifactId>jol-core</artifactId>
+            <version>${jol-core.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
