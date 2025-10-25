@@ -67,7 +67,6 @@ public class ObjectLockAnalysis {
      * - 调用对象的 `hashCode` 方法后，偏向锁被撤销的情况；
      * - 多次进入同步块时的锁行为变化。
      */
-    @SuppressWarnings("unused")
     private static void printBiasLock() {
         try {
             // Java中的偏向锁在JVM启动几秒之后才会被激活，

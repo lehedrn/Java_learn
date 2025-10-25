@@ -1,8 +1,5 @@
 package com.coderlee.concurrent.chapter06;
 
-import java.sql.Time;
-import java.util.concurrent.TimeUnit;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**

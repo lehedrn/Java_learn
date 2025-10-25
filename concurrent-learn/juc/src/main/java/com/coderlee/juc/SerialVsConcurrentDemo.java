@@ -33,6 +33,7 @@ public class SerialVsConcurrentDemo {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                @SuppressWarnings("unused")
                 int a = 0;
                 // 子线程执行累加操作
                 for (long i = 0; i < count; i++) {
