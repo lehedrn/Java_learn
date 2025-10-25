@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * ObjectSizeAnalysis 类用于分析 Java 对象的内存布局。
  * 它通过使用 JOL（Java Object Layout）工具来解析和打印对象的内存结构。
+ * 从 Java 6 的 Update 23 开始，64 位 JVM 默认启用了指针压缩（Compressed Oops）
+ * 在命令行中添加 -XX:-UseCompressedOops 参数以禁用压缩指针，从而更清晰地展示对象的实际内存占用情况。
  */
 @Slf4j
 public class ObjectSizeAnalysis {
