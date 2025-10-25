@@ -6,11 +6,17 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ObjectLightweightLockTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter07.jol.ObjectLightweightLockTest",
+            "projectName": "mykit-concurrent-chapter07"
+        },
+        {
+            "type": "java",
             "name": "ObjectBiasLockTest",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter07.jol.ObjectBiasLockTest",
-            "projectName": "mykit-concurrent-chapter07",
-            // "vmArgs": "-XX:+UseBiasedLocking -XX:BiasedLockingStartupDelay=0"
+            "projectName": "mykit-concurrent-chapter07"
         },
         {
             "type": "java",
