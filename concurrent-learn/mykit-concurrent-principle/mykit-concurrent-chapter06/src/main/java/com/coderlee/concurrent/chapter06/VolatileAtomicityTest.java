@@ -23,8 +23,6 @@ import lombok.extern.slf4j.Slf4j;
  * </ul>
  * </p>
  * 
- * @see VolatileVisibilityTest
- * @see VolatileOrderingTest
  */
 @Slf4j
 public class VolatileAtomicityTest {
