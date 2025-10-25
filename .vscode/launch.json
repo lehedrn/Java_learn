@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ObjectHeavyweightLockTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter07.jol.ObjectHeavyweightLockTest",
+            "projectName": "mykit-concurrent-chapter07"
+        },
+        {
+            "type": "java",
             "name": "ObjectLightweightLockTest",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter07.jol.ObjectLightweightLockTest",
