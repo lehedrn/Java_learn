@@ -6,6 +6,14 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ObjectBiasLockTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter07.jol.ObjectBiasLockTest",
+            "projectName": "mykit-concurrent-chapter07",
+            // "vmArgs": "-XX:+UseBiasedLocking -XX:BiasedLockingStartupDelay=0"
+        },
+        {
+            "type": "java",
             "name": "ObjectLockAnalysis",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter07.jol.ObjectLockAnalysis",
