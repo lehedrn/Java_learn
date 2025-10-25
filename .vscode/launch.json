@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ObjectLockAnalysis",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter07.jol.ObjectLockAnalysis",
+            "projectName": "mykit-concurrent-chapter07"
+        },
+        {
+            "type": "java",
             "name": "ObjectSizeAnalysis",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter07.jol.ObjectSizeAnalysis",
