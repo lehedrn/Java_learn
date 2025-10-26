@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "FairOrNonFairLockTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter09.FairOrNonFairLockTest",
+            "projectName": "mykit-concurrent-chapter09"
+        },
+        {
+            "type": "java",
+            "name": "NonfairLockTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter09.NonfairLockTest",
+            "projectName": "mykit-concurrent-chapter09"
+        },
+        {
+            "type": "java",
             "name": "FairLockTest",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter09.FairLockTest",
