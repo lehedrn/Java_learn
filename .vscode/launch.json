@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "UnsafeTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter09.UnsafeTest",
+            "projectName": "mykit-concurrent-chapter09"
+        },
+        {
+            "type": "java",
             "name": "LockSupportTest",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter09.LockSupportTest",
