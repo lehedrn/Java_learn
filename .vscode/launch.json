@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "LockSupportTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter09.LockSupportTest",
+            "projectName": "mykit-concurrent-chapter09"
+        },
+        {
+            "type": "java",
             "name": "StampedLockTest",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter09.StampedLockTest",
