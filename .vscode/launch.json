@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "UnsafeTransferAccount",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter11.UnsafeTransferAccount",
+            "projectName": "mykit-concurrent-chapter11"
+        },
+        {
+            "type": "java",
             "name": "CasCountIncrement",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter09.CasCountIncrement",
