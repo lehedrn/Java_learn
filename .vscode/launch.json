@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "SortedTransferAccount",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter11.SortedTransferAccount",
+            "projectName": "mykit-concurrent-chapter11"
+        },
+        {
+            "type": "java",
             "name": "ResourcesTransferAccount",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter11.ResourcesTransferAccount",
