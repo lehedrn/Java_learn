@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ReentrantLockTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter09.ReentrantLockTest",
+            "projectName": "mykit-concurrent-chapter09"
+        },
+        {
+            "type": "java",
             "name": "SharedLockTest",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter09.SharedLockTest",
