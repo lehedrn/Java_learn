@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "OptimisticLockTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter09.OptimisticLockTest",
+            "projectName": "mykit-concurrent-chapter09"
+        },
+        {
+            "type": "java",
             "name": "PessimismLockTest",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter09.PessimismLockTest",
