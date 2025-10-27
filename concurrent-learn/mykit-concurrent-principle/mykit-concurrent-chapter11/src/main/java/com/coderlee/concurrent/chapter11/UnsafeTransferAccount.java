@@ -32,11 +32,6 @@ public class UnsafeTransferAccount {
         Thread[] threads = new Thread[threadCount];
         for (int i = 0; i < threadCount; i++) {
             threads[i] = new Thread(() -> {
-                try {
-                    Thread.sleep((long) (Math.random() * 10)); // 随机延迟 0~10 毫秒
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
                 accountA.transferMoney(accountB, transferAmount);
             });
             threads[i].start();
@@ -77,6 +72,11 @@ public class UnsafeTransferAccount {
      */
     public void transferMoney(UnsafeTransferAccount targetAccount, long transferMoney) {
         synchronized (this) { // 锁定当前账户对象，确保当前账户的操作是线程安全的
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
             if (this.balance >= transferMoney) { // 检查当前账户余额是否足够
                 this.balance -= transferMoney; // 从当前账户扣除转账金额
                 targetAccount.balance += transferMoney; // 向目标账户增加转账金额

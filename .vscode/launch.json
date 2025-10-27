@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "DeadLockTransferAccount",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter11.DeadLockTransferAccount",
+            "projectName": "mykit-concurrent-chapter11"
+        },
+        {
+            "type": "java",
             "name": "UnsafeTransferAccount",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter11.UnsafeTransferAccount",
