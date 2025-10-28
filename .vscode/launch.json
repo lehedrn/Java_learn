@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ThreadLocalTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter14.ThreadLocalTest",
+            "projectName": "mykit-concurrent-chapter14"
+        },
+        {
+            "type": "java",
             "name": "SortedTransferAccount",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter11.SortedTransferAccount",
