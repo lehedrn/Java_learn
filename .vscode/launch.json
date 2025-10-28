@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ReentrantAQSLockTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter18.ReentrantAQSLockTest",
+            "projectName": "mykit-concurrent-chapter18"
+        },
+        {
+            "type": "java",
             "name": "ReadWriteCacheTest",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter17.ReadWriteCacheTest",
