@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ThreadLocalInheritTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter14.ThreadLocalInheritTest",
+            "projectName": "mykit-concurrent-chapter14"
+        },
+        {
+            "type": "java",
             "name": "ThreadLocalTest",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter14.ThreadLocalTest",
