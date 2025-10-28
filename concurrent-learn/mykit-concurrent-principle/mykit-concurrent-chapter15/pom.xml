@@ -5,23 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
           <groupId>com.coderlee</groupId>
-          <artifactId>concurrent-learn</artifactId>
+          <artifactId>mykit-concurrent-principle</artifactId>
           <version>1.0-SNAPSHOT</version>
     </parent>
-    <packaging>pom</packaging>
-    <modules>
-        <module>mykit-concurrent-chapter02</module>
-        <module>mykit-concurrent-chapter04</module>
-        <module>mykit-concurrent-chapter06</module>
-        <module>mykit-concurrent-chapter07</module>
-        <module>mykit-concurrent-chapter09</module>
-        <module>mykit-concurrent-chapter10</module>
-        <module>mykit-concurrent-chapter11</module>
-        <module>mykit-concurrent-chapter14</module>
-        <module>mykit-concurrent-chapter15</module>
-    </modules>
+
     <groupId>com.coderlee</groupId>
-    <artifactId>mykit-concurrent-principle</artifactId>
+    <artifactId>mykit-concurrent-chapter15</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
