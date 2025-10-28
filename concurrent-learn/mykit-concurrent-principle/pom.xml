@@ -19,6 +19,7 @@
         <module>mykit-concurrent-chapter11</module>
         <module>mykit-concurrent-chapter14</module>
         <module>mykit-concurrent-chapter15</module>
+        <module>mykit-concurrent-chapter16</module>
     </modules>
     <groupId>com.coderlee</groupId>
     <artifactId>mykit-concurrent-principle</artifactId>

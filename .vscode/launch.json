@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CasLockTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.chapter16.CasLockTest",
+            "projectName": "mykit-concurrent-chapter16"
+        },
+        {
+            "type": "java",
             "name": "ThreadPoolTest",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.chapter15.ThreadPoolTest",
