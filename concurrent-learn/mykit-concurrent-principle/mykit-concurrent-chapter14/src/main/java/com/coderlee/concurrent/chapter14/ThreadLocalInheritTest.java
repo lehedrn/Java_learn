@@ -19,7 +19,7 @@ public class ThreadLocalInheritTest {
      * 定义一个 ThreadLocal 变量，初始值为 null。
      * <p>该变量的作用是存储线程本地的字符串值。</p>
      */
-    private static ThreadLocal<String> THREAD_LOCAL = ThreadLocal.withInitial(() -> null);
+    private static final ThreadLocal<String> THREAD_LOCAL = ThreadLocal.withInitial(() -> null);
 
     /**
      * 程序入口方法。
