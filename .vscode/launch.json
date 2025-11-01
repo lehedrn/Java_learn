@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ThreadSort02",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.learn.lab03.ThreadSort02",
+            "projectName": "mykit-concurrent-learn"
+        },
+        {
+            "type": "java",
+            "name": "Threadsort01",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.learn.lab03.Threadsort01",
+            "projectName": "mykit-concurrent-learn"
+        },
+        {
+            "type": "java",
             "name": "ThreadState",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.learn.lab02.ThreadState",
