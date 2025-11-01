@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ThreadState",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.learn.lab02.ThreadState",
+            "projectName": "mykit-concurrent-learn"
+        },
+        {
+            "type": "java",
             "name": "ThreadHandlerTest",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.learn.lab01.ThreadHandlerTest",
