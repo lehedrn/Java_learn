@@ -24,6 +24,7 @@
         <module>mykit-concurrent-chapter18</module>
         <module>mykit-concurrent-chapter19</module>
         <module>mykit-concurrent-chapter20</module>
+        <module>mykit-concurrent-learn</module>
     </modules>
     <groupId>com.coderlee</groupId>
     <artifactId>mykit-concurrent-principle</artifactId>

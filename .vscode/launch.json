@@ -6,6 +6,48 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ExecutorsTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.learn.lab01.ExecutorsTest",
+            "projectName": "mykit-concurrent-learn"
+        },
+        {
+            "type": "java",
+            "name": "FutureTaskTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.learn.lab01.FutureTaskTest",
+            "projectName": "mykit-concurrent-learn"
+        },
+        {
+            "type": "java",
+            "name": "CallableTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.learn.lab01.CallableTest",
+            "projectName": "mykit-concurrent-learn"
+        },
+        {
+            "type": "java",
+            "name": "RunnableTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.learn.lab01.RunnableTest",
+            "projectName": "mykit-concurrent-learn"
+        },
+        {
+            "type": "java",
+            "name": "ThreadTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.learn.lab01.ThreadTest",
+            "projectName": "mykit-concurrent-learn"
+        },
+        {
+            "type": "java",
+            "name": "TestThreadBy3Method",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.learn.lab01.TestThreadBy3Method",
+            "projectName": "mykit-concurrent-learn"
+        },
+        {
+            "type": "java",
             "name": "Application",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.Application",
