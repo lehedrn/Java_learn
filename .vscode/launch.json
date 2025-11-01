@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "FutureTaskTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.learn.lab04.FutureTaskTest",
+            "projectName": "mykit-concurrent-learn"
+        },
+        {
+            "type": "java",
             "name": "FutureTest",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.learn.lab04.FutureTest",
