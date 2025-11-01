@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ProcessThreadTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.learn.lab01.ProcessThreadTest",
+            "projectName": "mykit-concurrent-learn"
+        },
+        {
+            "type": "java",
             "name": "ExecutorsTest",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.learn.lab01.ExecutorsTest",
