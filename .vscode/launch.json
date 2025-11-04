@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ScheduledThreadPoolTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.learn.lab09.ScheduledThreadPoolTest",
+            "projectName": "mykit-concurrent-learn"
+        },
+        {
+            "type": "java",
+            "name": "ScheduledThreadPoolExecutorTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.learn.lab09.ScheduledThreadPoolExecutorTest",
+            "projectName": "mykit-concurrent-learn"
+        },
+        {
+            "type": "java",
+            "name": "TimerTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.learn.lab09.TimerTest",
+            "projectName": "mykit-concurrent-learn"
+        },
+        {
+            "type": "java",
             "name": "SimpleDateFormatTest08",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.learn.lab06.SimpleDateFormatTest08",
