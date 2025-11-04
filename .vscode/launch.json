@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "SimpleDateFormatTest04",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.learn.lab06.SimpleDateFormatTest04",
+            "projectName": "mykit-concurrent-learn"
+        },
+        {
+            "type": "java",
             "name": "SimpleDateFormatTest03",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.learn.lab06.SimpleDateFormatTest03",
