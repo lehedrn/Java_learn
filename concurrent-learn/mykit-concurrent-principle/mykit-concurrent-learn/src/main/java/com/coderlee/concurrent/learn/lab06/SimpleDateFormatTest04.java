@@ -12,9 +12,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 解决SimpleDateFormat类的线程安全问题 方案三：Lock锁方式
- * Lock锁方式与synchronized锁方式{@link SimpleDateFormatTest03
- * }实现原理相同，都是在高并发下通过JVM的锁机制来保证程序的线程安全
+ * 解决SimpleDateFormat类的线程安全问题 
+ * 方案三：Lock锁方式
+ * Lock锁方式与synchronized锁方式{@link SimpleDateFormatTest03}实现原理相同，都是在高并发下通过JVM的锁机制来保证程序的线程安全
  * 
  * <p>
  * 虽然这种方式能够解决SimpleDateFormat类的线程安全问题，但是由于在程序的执行过程中，为SimpleDateFormat类对象加上了Lock锁，导致同一时刻只能有一个线程执行parse(String)方法。
