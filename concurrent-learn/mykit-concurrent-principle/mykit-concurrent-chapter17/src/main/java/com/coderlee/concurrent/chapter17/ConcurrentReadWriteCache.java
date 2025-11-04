@@ -88,9 +88,21 @@ public class ConcurrentReadWriteCache<K, V> implements ReadWriteCache<K, V> {
         }
         try {
             writeLock.lock(); // 获取写锁，确保独占写操作
-            log.info("{} 缓存数据不存在，从数据库中读取数据并写入缓存开始", Thread.currentThread().getName());
-            value = getvalueFromDB(key); // 从数据库中加载数据
-            map.put(key, value); // 将数据写入缓存
+            // 二次验证缓存中是否存在数据
+            /* 这是因为在高并发的场景下，可能会存在多个线程来竞争写锁的现象。例如：第一次执行get()方法时，缓存中的数据为空。如果
+            此时有三个线程同时调用get()方法，同时运行到 w.lock() 代码处，由于写锁的排他性。此时只有一个线程会获取到写锁，其他
+            两个线程则阻塞在 w.lock() 处。获取到写锁的线程继续往下执行查询数据库，将数据写入缓存，之后释放写锁。
+            此时，另外两个线程竞争写锁，某个线程会获取到锁，继续往下执行，如果在 w.lock() 后没有 v = m.get(key); 再次查询缓存
+            的数据，则这个线程会直接查询数据库，将数据写入缓存后释放写锁。最后一个线程同样会按照这个流程执行。
+            这里，实际上第一个线程已经查询过数据库，并且将数据写入缓存了，其他两个线程就没必要再次查询数据库了，直接从缓存中
+            查询出相应的数据即可。所以，在 w.lock() 后添加 v = m.get(key); 再次查询缓存的数据，能够有效的减少高并发场景下重复
+            查询数据库的问题，提升系统的性能。 */
+            value = map.get(key);
+            if (null == value) {
+                log.info("{} 缓存数据不存在，从数据库中读取数据并写入缓存开始", Thread.currentThread().getName());
+                value = getvalueFromDB(key); // 从数据库中加载数据
+                map.put(key, value); // 将数据写入缓存
+            }
         } finally {
             log.info("{} 从数据库中读取数据并写入缓存结束", Thread.currentThread().getName());
             writeLock.unlock(); // 释放写锁
