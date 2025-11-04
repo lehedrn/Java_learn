@@ -13,9 +13,14 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * <p>演示 {@link SimpleDateFormat} 在多线程环境下的线程安全性问题。</p>
  * 
- * <p>该类通过创建多个线程并发调用同一个 {@code SimpleDateFormat} 实例的解析方法，
+ * <p>
+ * 该类通过创建多个线程并发调用同一个 {@code SimpleDateFormat} 实例的解析方法，
  * 演示了潜在的线程安全问题。如果发生异常（如格式化失败或数字格式错误），
- * 程序会记录错误日志并终止运行。</p>
+ * 程序会记录错误日志并终止运行。
+ * </p>
+ * <p>
+ * DateFormat类中的Calendar对象被多线程共享，而Calendar对象本身不支持线程安全。
+ * </p>
  */
 @Slf4j
 public class SimpleDateFormatTest01 {
