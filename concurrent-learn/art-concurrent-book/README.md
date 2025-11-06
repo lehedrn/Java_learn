@@ -12,7 +12,6 @@
   |   |   |   |   |── coderlee 
   |   |   |   |   |   |── artconcurrentbook
   |   |   |   |   |   |   |── chapter01
-  |   |   |   |   |   |   |    └── Main.java # 
   |   |   |   |   |   |   |── chapter02
   |   |   |   |   |   |   |── chapter03
   |   |   |   |   |   |   |── chapter04
@@ -39,3 +38,13 @@
   1. volatile的应用
   2. synchronized的实现原理与应用
   3. 原子操作的实现原理
+
+- **chapter03** Java内存模型
+  1. Java内存模型的基础
+  2. 重排序
+  3. 顺序一致性
+  4. volatile的内存语义
+  5. 锁的内存语义
+  6. final域的内存语义
+  7. happens-before
+  8. 双重检查锁定与延迟初始化

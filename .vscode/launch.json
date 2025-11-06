@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ReorderExample",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter03.ReorderExample",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
             "name": "Counter",
             "request": "launch",
             "mainClass": "com.coderlee.artconcurrentbook.chapter02.Counter",
