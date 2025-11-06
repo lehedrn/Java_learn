@@ -12,6 +12,7 @@
     <modules>
         <module>juc</module>
         <module>mykit-concurrent-principle</module>
+        <module>art-concurrent-book</module>
     </modules>
     
     <packaging>pom</packaging>
