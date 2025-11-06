@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Counter",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter02.Counter",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
             "name": "DeadLockDemo",
             "request": "launch",
             "mainClass": "com.coderlee.artconcurrentbook.chapter01.DeadLockDemo",

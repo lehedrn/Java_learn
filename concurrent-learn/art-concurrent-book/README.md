@@ -34,3 +34,8 @@
   1. ConcurrencyTest 并发执行与单线程执行效率对比（上下文切换和CPU调度是有代价的）
   2. DeadLockDemo 演示死锁
   3. 资源限制的挑战，包含硬件资源与软件资源
+
+- **chapter02** Java并发机制的底层实现原理
+  1. volatile的应用
+  2. synchronized的实现原理与应用
+  3. 原子操作的实现原理
