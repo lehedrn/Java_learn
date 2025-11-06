@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "DeadLockDemo",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter01.DeadLockDemo",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
+            "name": "ConcurrencyTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter01.ConcurrencyTest",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
             "name": "ScheduledThreadPoolTest",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.learn.lab09.ScheduledThreadPoolTest",
