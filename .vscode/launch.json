@@ -6,6 +6,90 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ConnectionPoolTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter04.ConnectionPoolTest",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
+            "name": "Profiler",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter04.Profiler",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
+            "name": "Join",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter04.Join",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
+            "name": "Piped",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter04.Piped",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
+            "name": "WaitNotify",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter04.WaitNotify",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
+            "name": "Shutdown",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter04.Shutdown",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
+            "name": "Deprecated",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter04.Deprecated",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
+            "name": "Interrupted",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter04.Interrupted",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
+            "name": "Daemon",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter04.Daemon",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
+            "name": "ThreadState",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter04.ThreadState",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
+            "name": "Priority",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter04.Priority",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
+            "name": "MultiThread",
+            "request": "launch",
+            "mainClass": "com.coderlee.artconcurrentbook.chapter04.MultiThread",
+            "projectName": "art-concurrent-book"
+        },
+        {
+            "type": "java",
             "name": "ReorderExample",
             "request": "launch",
             "mainClass": "com.coderlee.artconcurrentbook.chapter03.ReorderExample",
