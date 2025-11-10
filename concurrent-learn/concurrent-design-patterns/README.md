@@ -9,7 +9,8 @@
 ## 目录结构
 ```
 concurrent-design-patterns
-    ├── concurrent-design-patterns-immutable  # 第1章 不可变模式
+    ├── concurrent-design-patterns-immutable            # 第1章 不可变模式
+    ├── concurrent-design-patterns-guarded-suspension   # 第2章 保护性暂挂模式
     ├── README.md 
     └── pom.xml
 ```
@@ -118,3 +119,49 @@ concurrent-design-patterns
 - `java.util.concurrent.CopyOnWriteArrayList`
 - 等效不可变
 - 写时复制(`Copy-On-Write`)
+
+### 第二章 保护性暂挂模式 (Guarded Suspension Pattern)
+#### 1. 模式概述
+保护性暂挂模式是一种并发设计模式，用于处理线程间协调问题。当某个线程需要执行某个操作但条件不满足时，该线程不会立即执行失败，而是被挂起等待直到条件满足后再继续执行。
+#### 2. 核心应用场景
+##### 2.1 报警系统示例
+在 `alarm` 包中展示了典型的Guarded Suspension模式应用：
+- [AlarmAgent.java](concurrent-design-patterns-guarded-suspension/src/main/java/com/coderlee/guarded/suspension/lock/alarm/agent/AlarmAgent.java) 报警代理类
+- [Blocker.java](concurrent-design-patterns-guarded-suspension/src/main/java/com/coderlee/guarded/suspension/lock/alarm/blocker/Blocker.java) 阻塞器接口
+- [JdkConditionBlocker.java](concurrent-design-patterns-guarded-suspension/src/main/java/com/coderlee/guarded/suspension/lock/alarm/blocker/JdkConditionBlocker.java) 基于JDK Condition的阻塞器实现
+**核心思想**：
+- 当报警代理未连接到服务器时，发送报警请求的线程会被挂起等待
+- 一旦连接建立，所有等待的线程会被唤醒并继续执行
+- 通过 [GuardedAction.java](concurrent-design-patterns-guarded-suspension/src/main/java/com/coderlee/guarded/suspension/lock/alarm/action/GuardedAction.java) 封装受保护的动作
+- 使用 [Predicate.java](concurrent-design-patterns-guarded-suspension/src/main/java/com/coderlee/guarded/suspension/lock/alarm/predicate/Predicate.java) 定义保护条件
+##### 2.2 缓冲区示例
+在 `buffer` 包中展示了基于Lock和Condition的缓冲区实现：
+- [RequestCacheBuffer.java](concurrent-design-patterns-guarded-suspension/src/main/java/com/coderlee/guarded/suspension/lock/buffer/RequestCacheBuffer.java) 请求缓存缓冲区
+- [Request.java](concurrent-design-patterns-guarded-suspension/src/main/java/com/coderlee/guarded/suspension/lock/buffer/Request.java) 请求对象
+**实现要点**：
+- 使用 `ReentrantLock` 和 `Condition` 实现线程协调
+- 当缓冲区为空时，消费者线程被挂起等待
+- 当缓冲区满时，生产者线程被挂起等待
+- 通过 `notEmpty` 和 `notFull` 两个条件变量协调生产者和消费者
+#### 3. 基础实现示例
+
+[demo](concurrent-design-patterns-guarded-suspension/src/main/java/com/coderlee/guarded/suspension/lock/demo) 包中提供了基础实现：
+- [GuardedQueue.java](concurrent-design-patterns-guarded-suspension/src/main/java/com/coderlee/guarded/suspension/lock/demo/GuardedQueue.java) 基于 synchronized/wait/notify 的队列实现
+- [GuardedQueueApp.java](concurrent-design-patterns-guarded-suspension/src/main/java/com/coderlee/guarded/suspension/lock/demo/GuardedQueueApp.java) 测试应用
+
+#### 4. 模式优势与适用场景
+- 优势
+  - 避免忙等待，提高系统资源利用率
+  - 简化线程间协调逻辑
+  - 提供清晰的条件等待和通知机制
+- 适用场景
+  - 线程间需要协调执行顺序的场景
+  - 条件不满足时需要等待而非立即失败的场景
+  - 生产者-消费者模式的实现
+  - 异步操作结果等待场景
+
+#### 5. 与其他模式的关系
+
+- 与生产者-消费者模式结合使用
+- 是观察者模式在并发场景下的实现基础
+- 与Future模式配合实现异步结果获取

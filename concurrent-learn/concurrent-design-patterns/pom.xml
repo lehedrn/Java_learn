@@ -15,6 +15,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>concurrent-design-patterns-immutable</module>
+        <module>concurrent-design-patterns-guarded-suspension</module>
     </modules>
 
     <properties>
