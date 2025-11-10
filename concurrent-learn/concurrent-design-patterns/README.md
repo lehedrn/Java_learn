@@ -9,8 +9,10 @@
 ## 目录结构
 ```
 concurrent-design-patterns
-    ├── concurrent-design-patterns-immutable            # 第1章 不可变模式
-    ├── concurrent-design-patterns-guarded-suspension   # 第2章 保护性暂挂模式
+    ├── concurrent-design-patterns-immutable                # 第1章 不可变模式
+    ├── concurrent-design-patterns-guarded-suspension       # 第2章 保护性暂挂模式
+    ├── concurrent-design-patterns-thread                   # 第3章 两阶段终止模式核心模块
+    ├── concurrent-design-patterns-two-phase-termination    # 第3章 两阶段终止模式应用
     ├── README.md 
     └── pom.xml
 ```
@@ -165,3 +167,63 @@ concurrent-design-patterns
 - 与生产者-消费者模式结合使用
 - 是观察者模式在并发场景下的实现基础
 - 与Future模式配合实现异步结果获取
+
+### 第三章 两阶段终止模式 (Two-Phase Termination Pattern)
+#### 1. 模式概述
+两阶段终止模式是一种并发设计模式，用于优雅地终止线程。它将线程终止过程分为两个阶段：
+1. **准备阶段**：发出终止请求，设置终止标志
+2. **执行阶段**：线程检测到终止标志后，清理资源并安全退出
+这种模式避免了强制终止线程可能导致的数据不一致问题，确保线程能够完成必要的清理工作。
+#### 2. 核心组件分析
+##### 2.1 基础框架 (concurrent-design-patterns-thread 模块)
+基础框架提供了两阶段终止模式的核心实现：
+- [TerminationToken](concurrent-design-patterns-thread/src/main/java/com/coderlee/concurrent/design/thread/TerminationToken.java): 终止令牌类，维护终止状态和任务计数
+    - `toShutdown` 终止标志
+    - `noExecuteTaskCount` 未执行任务计数器
+    - `coordinatedThreads` 协调线程队列
+- [Termination](concurrent-design-patterns-thread/src/main/java/com/coderlee/concurrent/design/thread/Termination.java): 终止接口，定义terminate方法
+- [AbstractTerminationThread](concurrent-design-patterns-thread/src/main/java/com/coderlee/concurrent/design/thread/AbstractTerminationThread.java): 抽象终止线程类
+    - 实现了标准的两阶段终止流程
+    - 提供了 `doRun()`、`doTerminate()`、`doCleanup()`等模板方法供子类实现
+##### 2.2 应用实现 (concurrent-design-patterns-two-phase-termination 模块)
+基于基础框架，提供了实际的应用示例：
+- [AlarmManager](concurrent-design-patterns-two-phase-termination/src/main/java/com/coderlee/concurrent/design/two/phase/alarm/right/AlarmManager.java): 告警管理器，单例模式
+- [AlarmSendingThread](concurrent-design-patterns-two-phase-termination/src/main/java/com/coderlee/concurrent/design/two/phase/alarm/right/AlarmSendingThread.java): 告警发送线程，继承自[AbstractTerminationThread](concurrent-design-patterns-thread/src/main/java/com/coderlee/concurrent/design/thread/AbstractTerminationThread.java)
+- [AlarmInfo](concurrent-design-patterns-two-phase-termination/src/main/java/com/coderlee/concurrent/design/two/phase/alarm/right/AlarmInfo.java): 告警信息实体类
+- [AlarmType](concurrent-design-patterns-two-phase-termination/src/main/java/com/coderlee/concurrent/design/two/phase/alarm/right/AlarmType.java): 告警类型枚举
+
+#### 3. 实现细节
+##### 3.1 正确实现 (right包)
+[AlarmSendingThread](concurrent-design-patterns-two-phase-termination/src/main/java/com/coderlee/concurrent/design/two/phase/alarm/right/AlarmSendingThread.java)继承自[AbstractTerminationThread](concurrent-design-patterns-thread/src/main/java/com/coderlee/concurrent/design/thread/AbstractTerminationThread.java)，实现了标准的两阶段终止：
+1. **第一阶段**: 调用 `AlarmManager.shutdown()` 方法
+   ```java
+   public synchronized void shutdown() {
+       if (shutdownRequested) {
+           throw new IllegalStateException("已经调用了shutdown方法....");
+       }
+       alarmSendingThread.terminate(); // 设置终止标志
+       shutdownRequested = true;
+   }
+   ```
+2. **第二阶段**: 线程检测终止标志并安全退出
+   ```java
+   @Override
+   protected void doRun() throws InterruptedException {
+       // 检测终止标志
+       if (terminationToken.isToShutdown() && terminationToken.noExecuteTaskCount.get() <= 0) {
+           // 完成清理工作后退出
+           break;
+       }
+       // 执行具体业务逻辑
+   }
+   ```
+##### 3.2 错误实现对比 (wrong包)
+错误实现展示了不恰当的线程终止方式：
+- 直接使用`Thread.interrupt()`强制中断
+- 线程不能优雅地完成正在进行的任务
+- 缺乏统一的终止管理机制
+#### 4. 核心优势
+1. **优雅终止**: 线程有机会完成清理工作，避免数据损坏
+2. **统一管理**: 通过[TerminationToken](concurrent-design-patterns-thread/src/main/java/com/coderlee/concurrent/design/thread/TerminationToken.java)统一管理多个协调线程
+3. **任务完整性**: 确保已接收的任务得到处理
+4. **扩展性强**: 基于抽象类的设计易于扩展

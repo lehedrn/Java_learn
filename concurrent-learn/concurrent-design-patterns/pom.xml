@@ -16,6 +16,8 @@
     <modules>
         <module>concurrent-design-patterns-immutable</module>
         <module>concurrent-design-patterns-guarded-suspension</module>
+        <module>concurrent-design-patterns-two-phase-termination</module>
+        <module>concurrent-design-patterns-thread</module>
     </modules>
 
     <properties>
