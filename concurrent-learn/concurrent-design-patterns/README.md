@@ -227,3 +227,64 @@ concurrent-design-patterns
 2. **统一管理**: 通过[TerminationToken](concurrent-design-patterns-thread/src/main/java/com/coderlee/concurrent/design/thread/TerminationToken.java)统一管理多个协调线程
 3. **任务完整性**: 确保已接收的任务得到处理
 4. **扩展性强**: 基于抽象类的设计易于扩展
+
+### 第四章 承诺模式 (Promise Pattern)
+
+#### 1. 模式概述
+承诺模式（Promise Pattern）是一种异步编程设计模式，用于处理异步操作及其结果。Promise代表了一个尚未完成但将来会完成的操作，它可以使得异步代码更加易读和易管理。
+
+#### 2. 核心概念
+- **Promise**: 代表一个异步操作的最终结果
+- **Future**: 用于获取异步操作结果的占位符
+- **异步执行**: 将耗时操作放在后台线程执行，不阻塞主线程
+
+#### 3. 应用场景示例
+
+##### 3.1 用户支付后奖励发放示例
+模拟用户支付成功后需要发送积分和优惠券的场景：
+
+- 错误实现 [PromiseWrongTest.java](concurrent-design-patterns-promise/src/main/java/com/coderlee/concurrent/design/promise/wrong/PromiseWrongTest.java)
+    - 虽然创建了线程处理积分发送，但使用 `Thread.join()` 阻塞主线程
+    - 导致优惠券发送必须等待积分发送完成后才能开始
+    - 实际上是串行执行，没有发挥并发优势
+
+- 正确实现 [PromiseRightTest.java](concurrent-design-patterns-promise/src/main/java/com/coderlee/concurrent/design/promise/right/PromiseRightTest.java)
+    - 使用 [Promisor.java](concurrent-design-patterns-promise/src/main/java/com/coderlee/concurrent/design/promise/right/Promisor.java) 创建异步任务
+    - 通过 `FutureTask` 实现异步执行
+    - 积分发送和优惠券发送可以并行执行，显著提升效率
+
+##### 3.2 文件同步示例
+模拟文件同步系统中连接服务器和扫描本地文件的并发处理：
+
+- [FileSyncerPromisor.java](concurrent-design-patterns-promise/src/main/java/com/coderlee/concurrent/design/promise/sync/FileSyncerPromisor.java)
+    - 异步初始化 [FileSyncer](concurrent-design-patterns-promise/src/main/java/com/coderlee/concurrent/design/promise/sync/FileSyncer.java#L5-L30) 实例并建立服务器连接
+    - 返回 `Future<FileSyncer>` 对象供后续使用
+- [FileSyncerTask.java](concurrent-design-patterns-promise/src/main/java/com/coderlee/concurrent/design/promise/sync/FileSyncerTask.java)
+    - 并发执行文件扫描和服务器连接建立
+    - 提升整体处理效率
+
+#### 4. 核心组件分析
+
+- [Promisor.java](concurrent-design-patterns-promise/src/main/java/com/coderlee/concurrent/design/promise/right/Promisor.java)
+    - 使用 `FutureTask` 包装异步任务
+    - 在新线程中执行任务
+    - 返回 `Future` 对象供调用方使用
+
+- [FileSyncerPromisor.java](concurrent-design-patterns-promise/src/main/java/com/coderlee/concurrent/design/promise/sync/FileSyncerPromisor.java)
+    - 单例模式实现
+    - 异步初始化复杂资源
+    - 使用专用线程池执行任务
+
+#### 5. 模式优势与适用场景
+
+- **优势**
+    - 提高系统响应性，避免长时间阻塞
+    - 支持并发执行多个独立任务
+    - 简化异步编程模型
+    - 提供统一的异步结果处理接口
+
+- **适用场景**
+    - 耗时的I/O操作（网络请求、文件读写等）
+    - 需要并行处理多个独立任务的场景
+    - 需要延迟初始化复杂资源的情况
+    - 异步处理用户请求以提升用户体验

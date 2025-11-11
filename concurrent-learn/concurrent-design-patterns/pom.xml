@@ -18,6 +18,7 @@
         <module>concurrent-design-patterns-guarded-suspension</module>
         <module>concurrent-design-patterns-two-phase-termination</module>
         <module>concurrent-design-patterns-thread</module>
+        <module>concurrent-design-patterns-promise</module>
     </modules>
 
     <properties>

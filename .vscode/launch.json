@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "PromiseWrongTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.design.promise.wrong.PromiseWrongTest",
+            "projectName": "concurrent-design-patterns-promise"
+        },
+        {
+            "type": "java",
             "name": "ConnectionPoolTest",
             "request": "launch",
             "mainClass": "com.coderlee.artconcurrentbook.chapter04.ConnectionPoolTest",
