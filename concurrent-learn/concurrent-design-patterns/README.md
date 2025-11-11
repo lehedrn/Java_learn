@@ -13,6 +13,7 @@ concurrent-design-patterns
     ├── concurrent-design-patterns-guarded-suspension       # 第2章 保护性暂挂模式
     ├── concurrent-design-patterns-thread                   # 第3章 两阶段终止模式核心模块
     ├── concurrent-design-patterns-two-phase-termination    # 第3章 两阶段终止模式应用
+    |—— concurrent-design-patterns-promise                  # 第四章 承诺模式
     ├── README.md 
     └── pom.xml
 ```
