@@ -15,6 +15,7 @@ concurrent-design-patterns
     ├── concurrent-design-patterns-two-phase-termination    # 第3章 两阶段终止模式应用
     |—— concurrent-design-patterns-promise                  # 第4章 承诺模式
     |—— concurrent-design-patterns-producer-comsumer        # 第5章 生产者消费者模式
+    |—— concurrent-design-patterns-active-object            # 第6章 主动对象模式
     ├── README.md 
     └── pom.xml
 ```
@@ -349,3 +350,74 @@ concurrent-design-patterns
 - 需要解耦生产数据和消费数据的系统
 - 需要缓冲大量数据的系统
 - 需要支持并发生产和消费的场景
+
+### 第6章 主动对象模式
+#### 1. 模式概述
+主动对象模式（Active Object Pattern）是一种并发设计模式，它将方法调用与方法执行分离，通过异步方式处理请求。该模式封装了控制流，使得对象的方法调用和执行发生在不同的线程中，提高了系统的并发性能和响应性。
+
+#### 2. 核心概念
+- **方法请求对象（Method Request）**: 封装了方法调用的参数和目标对象
+- **调度器（Scheduler）**: 管理方法请求队列和执行线程
+- **主动对象（Active Object）**: 包含自己的控制线程和服务例程的对象
+- **代理（Proxy）**: 向客户端提供接口的对象
+
+#### 3. 应用场景示例
+
+##### 3.1 商品短链接生成与请求存储示例
+模拟电商系统中生成商品短链接并存储请求的场景：
+
+- **错误实现 (wrong包)**:
+    - 所有操作都在同一线程中顺序执行
+    - 生成短链接、保存商品信息、存储URL映射等操作依次进行
+    - 如果任何一个环节出现延迟，整个流程都会被阻塞
+    - 无法充分利用系统资源
+
+- **正确实现 (right包)**:
+    - 使用主动对象模式将耗时的存储操作异步化
+    - [URLServiceImpl](concurrent-design-patterns-active-object/src/main/java/com/coderlee/concurrent/design/active/object/right/URLServiceImpl.java) 在短链接生成失败时，通过 [ProxyRequestStore](concurrent-design-patterns-active-object/src/main/java/com/coderlee/concurrent/design/active/object/right/ProxyRequestStore.java) 异步存储请求
+    - [ProxyRequestStore](concurrent-design-patterns-active-object/src/main/java/com/coderlee/concurrent/design/active/object/right/ProxyRequestStore.java) 使用线程池异步执行 [DBRequestStore](concurrent-design-patterns-active-object/src/main/java/com/coderlee/concurrent/design/active/object/right/DBRequestStore.java) 的存储操作
+    - 主线程不需要等待耗时的存储操作完成即可继续执行
+
+#### 4. 核心组件分析
+
+- [GoodsRequest](concurrent-design-patterns-active-object/src/main/java/com/coderlee/concurrent/design/active/object/right/GoodsRequest.java)
+    - 封装客户端请求参数的数据对象
+    - 作为方法请求对象(Method Request)的载体
+
+- [RequestStore](concurrent-design-patterns-active-object/src/main/java/com/coderlee/concurrent/design/active/object/right/RequestStore.java) 接口
+    - 定义了存储请求的方法规范
+
+- [DBRequestStore](concurrent-design-patterns-active-object/src/main/java/com/coderlee/concurrent/design/active/object/right/DBRequestStore.java)
+    - 实现 [RequestStore](concurrent-design-patterns-active-object/src/main/java/com/coderlee/concurrent/design/active/object/right/RequestStore.java) 接口，模拟实际的数据库存储操作
+    - 代表主动对象模式中的服务例程(Service Routine)
+
+- [ProxyRequestStore](concurrent-design-patterns-active-object/src/main/java/com/coderlee/concurrent/design/active/object/right/ProxyRequestStore.java)
+    - 实现代理模式，向客户端提供统一接口
+    - 内部使用线程池实现调度器(Scheduler)功能
+    - 将方法请求封装为任务并提交给线程池执行
+
+- [URLServiceImpl](concurrent-design-patterns-active-object/src/main/java/com/coderlee/concurrent/design/active/object/right/URLServiceImpl.java)
+    - 模拟业务逻辑处理，演示主动对象模式的使用场景
+    - 在处理失败时触发异步存储操作
+
+#### 5. 工作流程
+
+1. 客户端创建 `GoodsRequest` 对象并调用 `URLService.getShortUrlByGoodsRequest()` 方法
+2. `URLServiceImpl` 尝试生成短链接，如果失败则调用 `ProxyRequestStore.getInstance().flush()` 异步存储请求
+3. `ProxyRequestStore` 将存储请求封装为Callable任务并提交给线程池
+4. 线程池中的工作线程执行 `DBRequestStore.flush()` 方法，完成实际的存储操作
+5. 主线程无需等待存储操作完成即可继续执行其他任务
+
+#### 6. 模式优势与适用场景
+
+##### 优势
+- **提高响应性**: 方法调用立即返回，实际执行在后台进行
+- **并发处理**: 多个请求可以并发执行，提高系统吞吐量
+- **资源管理**: 通过调度器统一管理系统资源
+- **解耦**: 调用方与执行方完全解耦
+
+##### 适用场景
+- 需要异步处理耗时操作的场景
+- 需要提高系统并发性能的应用
+- 需要解耦方法调用与执行的系统
+- 处理大量并发请求的服务端应用
