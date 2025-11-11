@@ -13,7 +13,8 @@ concurrent-design-patterns
     ├── concurrent-design-patterns-guarded-suspension       # 第2章 保护性暂挂模式
     ├── concurrent-design-patterns-thread                   # 第3章 两阶段终止模式核心模块
     ├── concurrent-design-patterns-two-phase-termination    # 第3章 两阶段终止模式应用
-    |—— concurrent-design-patterns-promise                  # 第四章 承诺模式
+    |—— concurrent-design-patterns-promise                  # 第4章 承诺模式
+    |—— concurrent-design-patterns-producer-comsumer        # 第5章 生产者消费者模式
     ├── README.md 
     └── pom.xml
 ```
@@ -289,3 +290,62 @@ concurrent-design-patterns
     - 需要并行处理多个独立任务的场景
     - 需要延迟初始化复杂资源的情况
     - 异步处理用户请求以提升用户体验
+
+### 第5章 生产者消费者模式
+生产者消费者模式是一种经典的并发设计模式，用于解决生产者和消费者之间的速度不匹配问题。该模式通过一个缓冲区（通常称为队列）来平衡生产者和消费者的处理速度，实现解耦和提高系统吞吐量。
+
+#### 1. 模式概述
+
+生产者消费者模式的核心思想是将生产数据和消费数据的过程分离，通过一个共享的缓冲区来进行数据交换。生产者负责生成数据并放入缓冲区，消费者则从缓冲区取出数据进行处理。
+
+### 2. 错误实现示例 (wrong包)
+
+在 `wrong` 包中展示了没有正确使用生产者消费者模式的实现：
+
+- [PCWrongTest.java](concurrent-design-patterns-producer-comsumer/src/main/java/com/coderlee/concurrent/design/pc/wrong/PCWrongTest.java) 展示了串行执行的场景，各个服务(DBService、UploadService、IndexService)依次执行，没有并发处理。
+
+- [PCWrongTest2.java](concurrent-design-patterns-producer-comsumer/src/main/java/com/coderlee/concurrent/design/pc/wrong/PCWrongTest2.java) 和 [PCWrongTest3.java](concurrent-design-patterns-producer-comsumer/src/main/java/com/coderlee/concurrent/design/pc/wrong/PCWrongTest3.java) 虽然尝试使用线程池来并行处理部分任务(IndexService)，但仍存在以下问题:
+    - 没有真正的缓冲区来存储待处理的任务
+    - 生产者和消费者之间仍然是紧耦合
+    - 无法平滑处理生产者和消费者速度不匹配的问题
+
+### 3. 正确实现示例 (right包)
+
+在 `right` 包中展示了正确的生产者消费者模式实现：
+
+#### 3.1 核心组件
+
+- [Channel.java](concurrent-design-patterns-producer-comsumer/src/main/java/com/coderlee/concurrent/design/pc/right/Channel.java) 接口定义了通道的基本操作：`put()` 和 `take()`
+- [BlockingQueueChannel.java](concurrent-design-patterns-producer-comsumer/src/main/java/com/coderlee/concurrent/design/pc/right/BlockingQueueChannel.java) 是 `Channel` 接口的具体实现，使用 `BlockingQueue` 作为底层存储
+- [FileInfo.java](concurrent-design-patterns-producer-comsumer/src/main/java/com/coderlee/concurrent/design/pc/right/FileInfo.java) 是传输的数据对象，表示文件信息
+- [FileProcessor.java](concurrent-design-patterns-producer-comsumer/src/main/java/com/coderlee/concurrent/design/pc/right/FileProcessor.java) 充当生产者角色，负责将文件信息放入通道
+- [FileIndexThread.java](concurrent-design-patterns-producer-comsumer/src/main/java/com/coderlee/concurrent/design/pc/right/FileIndexThread.java) 充当消费者角色，从通道中取出文件信息进行处理
+
+#### 3.2 工作流程
+
+1. [FileProcessor](concurrent-design-patterns-producer-comsumer/src/main/java/com/coderlee/concurrent/design/pc/right/FileProcessor.java) 作为生产者，通过 `uploadFile()` 方法将 `FileInfo` 对象放入 `Channel`
+2. [FileIndexThread](concurrent-design-patterns-producer-comsumer/src/main/java/com/coderlee/concurrent/design/pc/right/FileIndexThread.java) 作为消费者，在后台持续从 `Channel` 中取出 `FileInfo` 对象进行处理
+3. [BlockingQueueChannel](concurrent-design-patterns-producer-comsumer/src/main/java/com/coderlee/concurrent/design/pc/right/BlockingQueueChannel.java) 使用 `ArrayBlockingQueue` 作为缓冲区，自动处理生产者和消费者之间的同步问题
+
+#### 3.3 测试示例
+
+[FileTest.java](concurrent-design-patterns-producer-comsumer/src/main/java/com/coderlee/concurrent/design/pc/right/FileTest.java) 演示了完整的生产者消费者流程：
+1. 启动消费者线程
+2. 生产者连续上传两个文件
+3. 消费者异步处理这些文件
+4. 最终关闭消费者线程
+
+### 4. 模式优势
+
+1. **解耦**：生产者和消费者之间没有直接依赖关系
+2. **平衡速度差异**：通过缓冲区平衡生产者和消费者的处理速度
+3. **提高系统吞吐量**：生产者和消费者可以并行工作
+4. **支持并发**：多个生产者和消费者可以同时工作
+5. **平滑流量削峰**：在突发流量情况下，通过缓冲区平滑处理
+
+### 5. 适用场景
+
+- 处理速度不匹配的生产者和消费者场景
+- 需要解耦生产数据和消费数据的系统
+- 需要缓冲大量数据的系统
+- 需要支持并发生产和消费的场景
