@@ -21,6 +21,7 @@
         <module>concurrent-design-patterns-promise</module>
         <module>concurrent-design-patterns-producer-comsumer</module>
         <module>concurrent-design-patterns-active-object</module>
+        <module>concurrent-design-patterns-thread-pool</module>
     </modules>
 
     <properties>

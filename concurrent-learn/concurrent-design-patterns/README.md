@@ -16,6 +16,7 @@ concurrent-design-patterns
     |—— concurrent-design-patterns-promise                  # 第4章 承诺模式
     |—— concurrent-design-patterns-producer-comsumer        # 第5章 生产者消费者模式
     |—— concurrent-design-patterns-active-object            # 第6章 主动对象模式
+    |—— concurrent-design-patterns-thread-pool              # 第7章 线程池模式
     ├── README.md 
     └── pom.xml
 ```
@@ -421,3 +422,71 @@ concurrent-design-patterns
 - 需要提高系统并发性能的应用
 - 需要解耦方法调用与执行的系统
 - 处理大量并发请求的服务端应用
+
+### # 第7章 线程池模式
+#### 1. 模式概述
+线程池模式是一种并发设计模式，用于管理和复用线程资源。通过预先创建一组线程并将其保存在池中，避免了频繁创建和销毁线程的开销，提高了系统性能和资源利用率。
+#### 2. 核心应用场景
+##### 2.1 消息推送系统示例
+项目通过消息推送场景展示了线程池模式的应用：
+- [MessageService](concurrent-design-patterns-thread-pool/src/main/java/com/coderlee/concurrent/design/thread/pool/common/MessageService.java) 接口定义了消息发送的标准操作
+- [MessageServiceImpl](concurrent-design-patterns-thread-pool/src/main/java/com/coderlee/concurrent/design/thread/pool/common/MessageServiceImpl.java) 实现了具体的发送逻辑，包括模拟耗时操作
+- 展示了错误和正确的线程池使用方式
+#### 3. 实现分析
+##### 3.1 错误实现 (`wrong` 包)
+###### 3.1.1 直接创建线程方式 ([MessageTest.java](concurrent-design-patterns-thread-pool/src/main/java/com/coderlee/concurrent/design/thread/pool/wrong/MessageTest.java))
+**存在的问题**：
+- 每次都需要创建新线程，消耗系统资源
+- 无法控制并发线程数量，可能导致系统资源耗尽
+- 线程生命周期管理困难
+###### 3.1.2 不合适的线程池 ([MessageWrongThreadPoolTest.java](concurrent-design-patterns-thread-pool/src/main/java/com/coderlee/concurrent/design/thread/pool/wrong/MessageWrongThreadPoolTest.java))
+**存在的问题**：
+- 使用 `Executors.newCachedThreadPool()` 创建的线程池没有上限
+- 在高并发场景下可能创建过多线程，导致系统资源耗尽
+- 缺乏对线程池参数的精细控制
+##### 3.2 正确实现 (`right` 包)
+###### 3.2.1 合理配置的线程池 ([MessageRightThreadPool.java](concurrent-design-patterns-thread-pool/src/main/java/com/coderlee/concurrent/design/thread/pool/right/MessageRightThreadPool.java))
+**优势**：
+- 合理设置核心线程数和最大线程数
+- 使用有界队列防止内存溢出
+- 自定义线程命名便于调试
+- 设置拒绝策略处理过载情况
+- 添加关闭钩子优雅关闭线程池
+#### 4. 自定义线程池实现
+##### 4.1 简单线程池实现 ([ThreadPool.java](concurrent-design-patterns-thread-pool/src/main/java/com/coderlee/concurrent/design/thread/pool/threadpool/ThreadPool.java))
+项目还提供了自定义线程池的实现：
+- 使用 `BlockingQueue` 作为工作队列
+- 内部维护工作线程列表
+- 实现基本的任务提交和执行机制
+##### 4.2 核心组件
+- [ThreadPool](concurrent-design-patterns-thread-pool/src/main/java/com/coderlee/concurrent/design/thread/pool/common/ThreadPool.java): 自定义线程池类
+- [WorkThread](concurrent-design-patterns-thread-pool/src/main/java/com/coderlee/concurrent/design/thread/pool/common/ThreadPool.java): 工作线程类，负责从队列中取任务执行
+- [ThreadPoolTest](concurrent-design-patterns-thread-pool/src/main/java/com/coderlee/concurrent/design/thread/pool/common/ThreadPoolTest.java): 测试类，验证线程池功能
+#### 5. 模式优势与适用场景
+##### 5.1 优势
+- **资源复用**: 减少线程创建和销毁的开销
+- **性能提升**: 避免频繁创建线程的性能损耗
+- **控制并发**: 可以有效控制系统并发线程数量
+- **管理便利**: 提供统一的线程管理和监控机制
+- **提高响应性**: 任务提交后可以立即执行，无需等待线程创建
+##### 5.2 适用场景
+- 高并发处理大量短期异步任务
+- 需要控制并发线程数量的场景
+- 执行大量相似性质任务的应用
+- 需要提高系统资源利用率的场合
+- 对响应时间有要求的服务端应用
+#### 6. 最佳实践
+1. **合理配置参数**:
+    - 根据业务特点设置合适的核心线程数和最大线程数
+    - 选择适当的队列类型和容量
+    - 设置合理的拒绝策略
+2. **优雅关闭**:
+    - 使用 `shutdown()` 或 `shutdownNow()` 方法关闭线程池
+    - 添加关闭钩子确保程序退出时正确释放资源
+3. **监控和调优**:
+    - 监控线程池运行状态
+    - 根据实际负载调整参数配置
+4. **避免常见陷阱**:
+    - 不要使用 `Executors` 工具类创建无界线程池
+    - 注意任务执行异常的处理
+    - 避免在任务中执行阻塞操作影响线程池性能
