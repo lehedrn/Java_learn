@@ -18,6 +18,7 @@ concurrent-design-patterns
     |—— concurrent-design-patterns-active-object            # 第6章 主动对象模式
     |—— concurrent-design-patterns-thread-pool              # 第7章 线程池模式
     |—— concurrent-design-patterns-threadlocal              # 第8章 线程特有存储模式
+    |—— concurrent-design-patterns-thread-close             # 第9章 串行线程封闭模式
     ├── README.md 
     └── pom.xml
 ```
@@ -544,7 +545,61 @@ concurrent-design-patterns
 ##### 5.3 避免存储大对象
 ThreadLocal中存储的对象生命周期与线程绑定，在Web应用等长生命周期线程中应避免存储大对象，防止内存泄漏。
 #### 6. 与其他模式的关系
-
 - 与不可变模式结合使用，可以进一步增强线程安全性
 - 是实现上下文传递的重要手段，常用于分布式追踪系统
 - 与线程池模式配合使用时需特别注意数据清理问题
+
+### 第9章 串行线程封闭模式 (Serial Thread Confinement Pattern)
+#### 1. 模式概述
+串行线程封闭模式是一种并发设计模式，它通过将多个线程的任务交给单一专用线程来顺序执行，从而避免了多线程并发访问共享资源时的同步问题。该模式利用线程封闭的思想，确保同一时刻只有一个线程访问特定资源，从根本上消除线程安全问题。
+#### 2. 核心应用场景
+##### 2.1 文件下载服务示例
+在文件下载场景中，需要确保文件客户端的线程安全性，同时高效处理多个下载请求：
+- **错误实现** ([wrong包](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/wrong)):
+    - [FileServiceImpl.java](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/wrong/FileServiceImpl.java) 中每个线程直接调用 [FileClient](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/common/FileClient.java) 的方法
+    - 由于 [FileClient](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/common/FileClient.java) 不是线程安全的，多线程并发访问会导致潜在问题
+    - [FileWrongTest.java](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/wrong/FileWrongTest.java) 和 [FileThreadPoolTest.java](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/wrong/FileThreadPoolTest.java) 展示了直接多线程访问带来的风险
+- **正确实现** ([right包](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/right)):
+    - [WorkThread.java](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/right/WorkThread.java) 继承自 [AbstractTerminationThread](concurrent-design-patterns-thread/src/main/java/com/coderlee/concurrent/design/thread/AbstractTerminationThread.java)，作为专门处理文件下载的工作者线程
+    - 使用 [ArrayBlockingQueue](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/right/WorkThread.java) 作为任务队列，实现生产者-消费者模式
+    - [FileServiceImpl.java](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/right/FileServiceImpl.java) 将下载请求放入队列，由专用线程顺序处理
+    - [FileRightTest.java](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/right/FileRightTest.java) 展示了正确的串行线程封闭使用方式
+#### 3. 核心组件分析
+##### 3.1 共同组件
+- [FileClient.java](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/common/FileClient.java):
+    - 模拟文件客户端，包含初始化和下载文件的功能
+    - 本身不是线程安全的，需要通过串行线程封闭模式来保证线程安全
+##### 3.2 错误实现组件
+- [FileService.java](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/wrong/FileService.java):
+    - 定义文件服务接口
+- [FileServiceImpl.java](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/wrong/FileServiceImpl.java):
+    - 直接调用 [FileClient](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/common/FileClient.java)，存在线程安全隐患
+##### 3.3 正确实现组件
+- [FileService.java](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/right/FileService.java):
+    - 扩展了文件服务接口，添加了初始化和关闭方法
+- [FileServiceImpl.java](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/right/FileServiceImpl.java):
+    - 使用 [WorkThread](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/right/WorkThread.java) 处理下载请求
+    - 实现了两阶段终止模式，可以优雅关闭
+- [WorkThread.java](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/right/WorkThread.java):
+    - 继承自 [AbstractTerminationThread](concurrent-design-patterns-thread/src/main/java/com/coderlee/concurrent/design/thread/AbstractTerminationThread.java)
+    - 使用阻塞队列作为任务缓冲区
+    - 专门负责顺序处理文件下载任务
+- [FileRightTest.java](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/right/FileRightTest.java):
+    - 测试类，展示如何正确使用串行线程封闭模式
+#### 4. 工作流程
+1. 多个线程通过 [FileService.downloadFile()](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/right/FileService.java) 提交下载任务
+2. [FileServiceImpl](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/right/FileServiceImpl.java) 将任务放入 [WorkThread](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/right/WorkThread.java) 的阻塞队列
+3. 专用的 [WorkThread](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/right/WorkThread.java) 从队列中取出任务顺序执行
+4. 通过 [FileService.shutdown()](concurrent-design-patterns-thread-close/src/main/java/com/coderlee/concurrent/design/thread/close/right/FileService.java) 实现优雅关闭
+#### 5. 模式优势与适用场景
+##### 5.1 优势
+- **线程安全**: 通过线程封闭消除并发访问问题
+- **简化设计**: 无需复杂的同步机制
+- **有序处理**: 任务按照提交顺序执行
+- **资源可控**: 可以控制并发线程数量
+- **易于管理**: 结合两阶段终止模式实现优雅关闭
+##### 5.2 适用场景
+- 处理非线程安全组件的并发访问
+- 需要保证任务执行顺序的场景
+- 需要限制并发资源使用的场合
+- 对共享资源进行串行化访问的需求

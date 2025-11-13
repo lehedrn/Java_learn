@@ -23,6 +23,7 @@
         <module>concurrent-design-patterns-active-object</module>
         <module>concurrent-design-patterns-thread-pool</module>
         <module>concurrent-design-patterns-threadlocal</module>
+        <module>concurrent-design-patterns-thread-close</module>
     </modules>
 
     <properties>
