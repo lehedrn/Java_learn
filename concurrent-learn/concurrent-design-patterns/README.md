@@ -17,6 +17,7 @@ concurrent-design-patterns
     |—— concurrent-design-patterns-producer-comsumer        # 第5章 生产者消费者模式
     |—— concurrent-design-patterns-active-object            # 第6章 主动对象模式
     |—— concurrent-design-patterns-thread-pool              # 第7章 线程池模式
+    |—— concurrent-design-patterns-threadlocal              # 第8章 线程特有存储模式
     ├── README.md 
     └── pom.xml
 ```
@@ -490,3 +491,60 @@ concurrent-design-patterns
     - 不要使用 `Executors` 工具类创建无界线程池
     - 注意任务执行异常的处理
     - 避免在任务中执行阻塞操作影响线程池性能
+
+### 第8章 线程特有存储模式(Thread Specific Storage Pattern)
+#### 1. 模式概述
+线程特有存储模式是一种并发设计模式，它为每个线程提供独立的数据存储空间，确保线程间数据隔离。该模式通过`ThreadLocal`实现，使得每个线程都有自己独立的变量副本，避免了多线程环境下的数据竞争问题。
+#### 2. 核心应用场景
+##### 2.1 SimpleDateFormat线程安全问题解决
+在多线程环境中，`SimpleDateFormat`不是线程安全的，直接共享使用会导致解析错误。通过ThreadLocal为每个线程提供独立的`SimpleDateFormat`实例：
+- 错误实现 [WrongSimpleDateFormat.java](concurrent-design-patterns-threadlocal/src/main/java/com/coderlee/concurrent/design/threadlocal/wrong/WrongSimpleDateFormat.java):
+    - 多个线程共享同一个`SimpleDateFormat`实例
+    - 在高并发环境下会出现日期解析错误
+- 正确实现:
+    - [RightSimpleDateFormat.java](concurrent-design-patterns-threadlocal/src/main/java/com/coderlee/concurrent/design/threadlocal/right/RightSimpleDateFormat.java) 使用`ThreadLocal.withInitial()`初始化每个线程的`SimpleDateFormat`
+    - [RightSimpleDateFormat2.java](concurrent-design-patterns-threadlocal/src/main/java/com/coderlee/concurrent/design/threadlocal/right/RightSimpleDateFormat2.java) 通过懒加载方式为每个线程创建`SimpleDateFormat`
+##### 2.2 线程上下文数据传递
+在复杂的业务处理中，经常需要在线程执行过程中传递上下文数据：
+- 错误实现 [ThreadLocalWrongTest.java](concurrent-design-patterns-threadlocal/src/main/java/com/coderlee/concurrent/design/threadlocal/wrong/ThreadLocalWrongTest.java):
+    - 未清理ThreadLocal数据，可能导致内存泄漏
+    - 在线程池环境下可能出现数据污染
+- 正确实现 [ThreadLocalRightTest.java](concurrent-design-patterns-threadlocal/src/main/java/com/coderlee/concurrent/design/threadlocal/right/ThreadLocalRightTest.java):
+    - 在finally块中调用`THREAD_LOCAL.remove()`清理数据
+    - 确保线程复用时不会出现数据混淆
+#### 3. 核心组件分析
+##### 3.1 ThreadLocal基础使用
+[demo/ThreadLocalTest.java](concurrent-design-patterns-threadlocal/src/main/java/com/coderlee/concurrent/design/threadlocal/demo/ThreadLocalTest.java) 展示了ThreadLocal的基本用法：
+- 每个线程设置和获取自己独立的数据
+- 线程间数据完全隔离
+##### 3.2 ThreadLocal关键方法
+- `withInitial()`: 提供初始值的工厂方法
+- `get()`: 获取当前线程的变量值
+- `set()`: 设置当前线程的变量值
+- `remove()`: 清理当前线程的变量值，防止内存泄漏
+#### 4. 模式优势与适用场景
+##### 4.1 优势
+- **线程安全**: 每个线程拥有独立的数据副本，天然线程安全
+- **数据隔离**: 线程间数据完全隔离，避免相互干扰
+- **简化编程**: 无需显式同步机制就能保证线程安全
+- **性能良好**: 避免了锁竞争带来的性能损耗
+##### 4.2 适用场景
+- 需要在线程内共享数据但线程间隔离的场景
+- 非线程安全对象在多线程环境中的使用
+- 上下文信息在线程执行链路中的传递
+- 日志追踪ID、用户身份信息等跨方法传递
+#### 5. 最佳实践与注意事项
+##### 5.1 必须清理ThreadLocal数据
+在线程池环境下，线程会被复用，如果不清理ThreadLocal中的数据，可能导致：
+- 数据泄露到下一个任务
+- 内存泄漏问题
+应在适当的时候（如finally块中）调用`remove()`方法清理数据。
+##### 5.2 合理使用初始值
+可以通过`withInitial()`方法提供默认值，或者采用懒加载方式初始化，避免不必要的对象创建。
+##### 5.3 避免存储大对象
+ThreadLocal中存储的对象生命周期与线程绑定，在Web应用等长生命周期线程中应避免存储大对象，防止内存泄漏。
+#### 6. 与其他模式的关系
+
+- 与不可变模式结合使用，可以进一步增强线程安全性
+- 是实现上下文传递的重要手段，常用于分布式追踪系统
+- 与线程池模式配合使用时需特别注意数据清理问题

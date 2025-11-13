@@ -22,6 +22,7 @@
         <module>concurrent-design-patterns-producer-comsumer</module>
         <module>concurrent-design-patterns-active-object</module>
         <module>concurrent-design-patterns-thread-pool</module>
+        <module>concurrent-design-patterns-threadlocal</module>
     </modules>
 
     <properties>
