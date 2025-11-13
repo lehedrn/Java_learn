@@ -19,6 +19,7 @@ concurrent-design-patterns
     |—— concurrent-design-patterns-thread-pool              # 第7章 线程池模式
     |—— concurrent-design-patterns-threadlocal              # 第8章 线程特有存储模式
     |—— concurrent-design-patterns-thread-close             # 第9章 串行线程封闭模式
+    |—— concurrent-design-patterns-master-slave             # 第10章 主仆模式
     ├── README.md 
     └── pom.xml
 ```
@@ -603,3 +604,64 @@ ThreadLocal中存储的对象生命周期与线程绑定，在Web应用等长生
 - 需要保证任务执行顺序的场景
 - 需要限制并发资源使用的场合
 - 对共享资源进行串行化访问的需求
+
+### 第10章 主仆模式 (Master-Slave Pattern)
+#### 1. 模式概述
+主仆模式是一种并发设计模式，其中一个主节点(Master)负责分配任务并协调多个工作节点(Slave)的执行。该模式通过将复杂任务分解为多个子任务并行处理，提高系统处理能力和效率。
+#### 2. 核心应用场景
+##### 2.1 商品热度统计示例
+项目通过分析日志文件统计商品访问热度的场景展示了主仆模式的应用：
+- **错误实现** ([wrong包](concurrent-design-patterns-master-slave/src/main/java/com/coderlee/concurrent/design/master/slave/wrong)):
+    - [FileService.java](concurrent-design-patterns-master-slave/src/main/java/com/coderlee/concurrent/design/master/slave/wrong/FileService.java) 定义了文件服务接口
+    - [FileServiceImpl.java](concurrent-design-patterns-master-slave/src/main/java/com/coderlee/concurrent/design/master/slave/wrong/FileServiceImpl.java) 串行处理文件，效率低下
+    - [FileTest.java](concurrent-design-patterns-master-slave/src/main/java/com/coderlee/concurrent/design/master/slave/wrong/FileTest.java) 测试类，演示串行处理方式
+- **正确实现** ([right包](concurrent-design-patterns-master-slave/src/main/java/com/coderlee/concurrent/design/master/slave/right)):
+    - 采用主仆模式并行处理日志文件，显著提高处理效率
+#### 3. 核心组件分析
+##### 3.1 数据模型
+- [HotGoodsLog.java](concurrent-design-patterns-master-slave/src/main/java/com/coderlee/concurrent/design/master/slave/right/HotGoodsLog.java):
+    - 商品热度日志实体类，封装单条商品访问记录
+    - 包含商品ID(goodsId)和访问时间戳(timeStamp)字段
+##### 3.2 核心实现组件
+- [HotGoodsEnumeration.java](concurrent-design-patterns-master-slave/src/main/java/com/coderlee/concurrent/design/master/slave/right/HotGoodsEnumeration.java):
+    - 自定义实现的`Enumeration<InputStream>`接口
+    - 将一组日志文件名转换为对应的输入流序列
+    - 用于顺序读取多个日志文件的内容
+- [HotGoodsMaster.java](concurrent-design-patterns-master-slave/src/main/java/com/coderlee/concurrent/design/master/slave/right/HotGoodsMaster.java):
+    - Master节点，负责管理多个工作节点([HotGoodsSlave](concurrent-design-patterns-master-slave/src/main/java/com/coderlee/concurrent/design/master/slave/right/HotGoodsLog.java))
+    - 协调工作节点对日志数据的分析与汇总
+    - 主要职责:
+        - 创建并启动Slave节点
+        - 将日志文件分发给不同的工作节点处理
+        - 收集并汇总各Slave节点的处理结果
+- [HotGoodsSlave.java](concurrent-design-patterns-master-slave/src/main/java/com/coderlee/concurrent/design/master/slave/right/HotGoodsSlave.java):
+    - Slave节点，用于接收并执行由Master下发的日志解析任务
+    - 继承自`AbstractTerminationThread`，支持两阶段终止模式
+    - 主要职责:
+        - 从阻塞队列中获取待处理的日志文件
+        - 解析日志文件内容，统计商品访问次数
+        - 将统计结果更新到共享的`ConcurrentMap`中
+- [HotGoodsTest.java](concurrent-design-patterns-master-slave/src/main/java/com/coderlee/concurrent/design/master/slave/right/HotGoodsTest.java):
+    - 测试类，演示如何使用 `HotGoodsMaster` 和 `HotGoodsSlave` 分析日志文件
+    - 输出商品热度排名结果
+#### 4. 工作流程
+1. `HotGoodsTest` 创建 `HotGoodsMaster` 实例并加载待分析的日志文件清单
+2. `HotGoodsMaster` 创建指定数量的 `HotGoodsSlave` 工作节点并启动
+3. `HotGoodsMaster` 将日志文件按策略分发给各个 `HotGoodsSlave` 
+4. 每个 `HotGoodsSlave` 从任务队列中获取日志文件并解析
+5. `HotGoodsSlave` 将解析结果更新到共享的统计映射表中
+6. `HotGoodsMaster` 收集所有任务完成信号并返回最终统计结果
+#### 5. 模式优势与适用场景
+##### 5.1 优势
+- **并行处理**: 将大任务分解为多个小任务并行处理，提高处理效率
+- **负载均衡**: Master可以根据策略合理分配任务给各个Slave
+- **易于扩展**: 可以通过增加Slave节点来提高处理能力
+- **容错性**: 单个Slave节点故障不影响整体任务执行
+- **资源管理**: 统一管理和协调各个工作节点的资源使用
+##### 5.2 适用场景
+- 大量数据的并行处理任务
+- CPU密集型计算任务的分布式处理
+- 日志分析、数据挖掘等批处理场景
+- 需要将复杂任务分解为子任务的场合
+- 对处理能力有横向扩展需求的应用
+

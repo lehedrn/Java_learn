@@ -24,6 +24,7 @@
         <module>concurrent-design-patterns-thread-pool</module>
         <module>concurrent-design-patterns-threadlocal</module>
         <module>concurrent-design-patterns-thread-close</module>
+        <module>concurrent-design-patterns-master-slave</module>
     </modules>
 
     <properties>
