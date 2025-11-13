@@ -20,6 +20,9 @@ concurrent-design-patterns
     |—— concurrent-design-patterns-threadlocal              # 第8章 线程特有存储模式
     |—— concurrent-design-patterns-thread-close             # 第9章 串行线程封闭模式
     |—— concurrent-design-patterns-master-slave             # 第10章 主仆模式
+    |—— concurrent-design-patterns-pipeline                 # 第11章 流水线模式
+    |—— concurrent-design-patterns-pipeline-framework       # 第11章 流水线模式核心模块
+    |—— concurrent-design-patterns-half-sync-async          # 第12章 半同步半异步模式
     ├── README.md 
     └── pom.xml
 ```
@@ -665,3 +668,156 @@ ThreadLocal中存储的对象生命周期与线程绑定，在Web应用等长生
 - 需要将复杂任务分解为子任务的场合
 - 对处理能力有横向扩展需求的应用
 
+### 第11章 流水线模式 (Pipeline Pattern)
+#### 1. 模式概述
+流水线模式是一种并发设计模式，它将复杂的处理任务分解为一系列相互独立的处理阶段，每个阶段专注于完成特定的处理逻辑。数据在这些处理阶段之间流动，就像工业生产中的流水线一样，从而实现高效的并发处理。
+#### 2. 核心概念
+- **Pipe(管道)**: 流水线中的单个处理阶段，负责对输入数据进行特定处理并产生输出
+- **Pipeline(流水线)**: 整个处理流程，由多个Pipe串联组成
+- **Stage(阶段)**: 流水线中的每个处理环节
+- **Decorator(装饰器)**: 用于增强Pipe功能的包装类，如支持多线程处理
+#### 3. 核心应用场景
+##### 3.1 日志分析示例
+项目通过日志分析场景展示了流水线模式的应用：
+- **错误实现 (wrong包)**:
+    - [AnalysisServiceImpl.java](concurrent-design-patterns-pipeline/src/main/java/com/coderlee/concurrent/design/pipeline/wrong/AnalysisServiceImpl.java) 采用串行处理方式
+    - 一次性处理所有数据，无法利用并发优势
+    - 所有处理逻辑耦合在一起，难以扩展和维护
+- **正确实现 (right包)**:
+    - [AnalysisTask.java](concurrent-design-patterns-pipeline/src/main/java/com/coderlee/concurrent/design/pipeline/right/AnalysisTask.java) 使用流水线模式将日志处理分解为多个阶段
+    - 每个阶段独立处理，可以并行执行
+    - 易于扩展和维护
+#### 4. 核心组件分析
+##### 4.1 流水线框架 (concurrent-design-patterns-pipeline-framework)
+- [Pipe.java](concurrent-design-patterns-pipeline-framework/src/main/java/com/coderlee/concurrent/design/pipeline/framework/Pipe.java):
+    - 流水线中单个处理阶段的接口定义
+    - 定义了 `process()` 方法用于处理输入数据
+- [AbstractPipe.java](concurrent-design-patterns-pipeline-framework/src/main/java/com/coderlee/concurrent/design/pipeline/framework/AbstractPipe.java):
+    - Pipe接口的抽象实现
+    - 提供了处理链的管理、异常处理等通用功能
+    - 子类只需实现 `doProcess()` 方法
+- [Pipeline.java](concurrent-design-patterns-pipeline-framework/src/main/java/com/coderlee/concurrent/design/pipeline/framework/Pipeline.java):
+    - 流水线接口，继承自Pipe
+    - 提供了 `addPipe()` 方法用于添加处理阶段
+- [SimplePipeline.java](concurrent-design-patterns-pipeline-framework/src/main/java/com/coderlee/concurrent/design/pipeline/framework/SimplePipeline.java):
+    - Pipeline接口的基础实现
+    - 支持添加多个处理阶段并按顺序执行
+    - 提供了基于工作线程和线程池的两种执行方式
+- [WorkerThreadPipeDecorator.java](concurrent-design-patterns-pipeline-framework/src/main/java/com/coderlee/concurrent/design/pipeline/framework/WorkerThreadPipeDecorator.java):
+    - 基于工作线程的Pipe装饰器
+    - 为Pipe提供并发处理能力
+- [ThreadPoolPipeDecorator.java](concurrent-design-patterns-pipeline-framework/src/main/java/com/coderlee/concurrent/design/pipeline/framework/ThreadPoolPipeDecorator.java):
+    - 基于线程池的Pipe装饰器
+    - 为Pipe提供更灵活的并发处理能力
+##### 4.2 应用实现 (concurrent-design-patterns-pipeline)
+- [AnalysisTask.java](concurrent-design-patterns-pipeline/src/main/java/com/coderlee/concurrent/design/pipeline/right/AnalysisTask.java):
+    - 具体的流水线任务实现
+    - 构建了包含三个处理阶段的流水线:
+        1. 文件行分割阶段: 从日志行中提取数值部分
+        2. 数值统计阶段: 累加数值
+        3. 结果推送阶段: 输出统计结果
+#### 5. 工作流程
+1. 创建[SimplePipeline](concurrent-design-patterns-pipeline-framework/src/main/java/com/coderlee/concurrent/design/pipeline/framework/SimplePipeline.java)实例并配置处理阶段
+2. 通过 `addAsWorkerThreadBasedPipe()` 或 `addAsThreadPoolBasedPipe()` 方法添加处理阶段
+3. 初始化流水线并传入默认上下文
+4. 通过 `process()` 方法输入数据，数据在各阶段间流动处理
+5. 处理完成后关闭流水线释放资源
+#### 6. 模式优势与适用场景
+##### 6.1 优势
+- **提高处理效率**: 将复杂任务分解为多个阶段并行处理
+- **易于扩展**: 可以轻松添加新的处理阶段
+- **解耦处理逻辑**: 每个阶段专注处理特定任务，降低耦合度
+- **灵活性**: 支持多种执行方式(串行、基于工作线程、基于线程池)
+- **容错性**: 单个阶段的异常不会影响整个流水线
+##### 6.2 适用场景
+- 复杂数据处理任务的分解执行
+- 需要多阶段处理的业务流程
+- 对处理性能有较高要求的场景
+- 需要灵活组合处理逻辑的应用
+- 大数据量的批量处理任务
+#### 7. 最佳实践
+1. **合理划分处理阶段**:
+    - 每个阶段应该有明确的职责
+    - 避免阶段间过于紧密的耦合
+2. **选择合适的执行方式**:
+    - CPU密集型任务适合使用线程池
+    - I/O密集型任务可以考虑工作线程方式
+3. **异常处理**:
+    - 实现合适的[PipeContext](concurrent-design-patterns-pipeline-framework/src/main/java/com/coderlee/concurrent/design/pipeline/framework/PipeContext.java)处理异常
+    - 确保异常不会中断整个处理流程
+4. **资源管理**:
+    - 及时关闭流水线释放资源
+    - 合理配置线程池参数避免资源耗尽
+
+### 第12章 半同步半异步模式 (Half-Sync/Half-Async Pattern)
+#### 1. 模式概述
+半同步半异步模式是一种并发设计模式，它将同步和异步操作结合起来，以提高系统的性能和响应性。该模式通过将快速响应的同步操作与耗时的异步操作分离，使得系统能够在保持响应性的同时处理大量并发任务。
+在该模式中：
+- 同步层负责处理快速、简单的操作，如接收请求、初步处理等
+- 异步层负责处理耗时、复杂的操作，如I/O操作、复杂计算等
+#### 2. 核心应用场景
+##### 2.1 支付系统示例
+在支付系统中，支付操作需要快速响应，而后续的通知、日志记录等操作可以异步处理：
+- **错误实现** ([wrong包](concurrent-design-patterns-half-sync-async/src/main/java/com/coderlee/concurrent/design/half/sync/async/wrong)):
+    - [PayServiceImpl.java](concurrent-design-patterns-half-sync-async/src/main/java/com/coderlee/concurrent/design/half/sync/async/wrong/PayServiceImpl.java) 中支付和发送短信都在主线程中同步执行
+    - 整个操作耗时较长，影响用户体验和系统吞吐量
+    - [WrongPayTest.java](concurrent-design-patterns-half-sync-async/src/main/java/com/coderlee/concurrent/design/half/sync/async/wrong/WrongPayTest.java) 展示了同步处理方式
+- **正确实现** ([right包](concurrent-design-patterns-half-sync-async/src/main/java/com/coderlee/concurrent/design/half/sync/async/right)):
+    - 采用半同步半异步模式，支付操作同步执行，发送短信异步执行
+    - 显著提高系统响应性和吞吐量
+#### 3. 核心组件分析
+##### 3.1 基础异步任务框架
+- [AsyncTask.java](concurrent-design-patterns-half-sync-async/src/main/java/com/coderlee/concurrent/design/half/sync/async/right/AsyncTask.java):
+    - 抽象基类，提供异步任务执行框架
+    - 使用模板方法模式定义异步任务的标准流程
+    - 内置线程池管理，默认使用守护线程执行异步任务
+    - 提供前置处理(doPreExecute)、后置处理(doPostExecute)和异常处理(doExeception)钩子方法
+    - 核心方法dispatch用于派发异步任务，返回Future对象
+##### 3.2 具体实现组件
+- [SimpleAsyncTask.java](concurrent-design-patterns-half-sync-async/src/main/java/com/coderlee/concurrent/design/half/sync/async/right/SimpleAsyncTask.java):
+    - 继承自 [AsyncTask](concurrent-design-patterns-half-sync-async/src/main/java/com/coderlee/concurrent/design/half/sync/async/right/AsyncTask.java)，实现具体的短信发送任务
+    - 重写doExecute方法实现核心业务逻辑
+    - 重写doPreExecute方法实现任务执行前的准备工作
+- [PayService.java](concurrent-design-patterns-half-sync-async/src/main/java/com/coderlee/concurrent/design/half/sync/async/right/PayService.java):
+    - 定义支付服务接口
+- [PayServiceImpl.java](concurrent-design-patterns-half-sync-async/src/main/java/com/coderlee/concurrent/design/half/sync/async/right/PayServiceImpl.java):
+    - 实现支付服务接口
+    - 采用半同步半异步模式处理支付流程
+    - 支付逻辑同步执行，保证事务一致性
+    - 短信通知异步执行，提高响应速度
+    - 使用 [SimpleAsyncTask](concurrent-design-patterns-half-sync-async/src/main/java/com/coderlee/concurrent/design/half/sync/async/right/SimpleAsyncTask.java) 执行异步短信发送
+- [RightPayTest.java](concurrent-design-patterns-half-sync-async/src/main/java/com/coderlee/concurrent/design/half/sync/async/right/RightPayTest.java):
+    - 测试类，演示半同步半异步模式的使用效果
+#### 4. 工作流程
+1. 客户端发起支付请求
+2. [PayServiceImpl](concurrent-design-patterns-half-sync-async/src/main/java/com/coderlee/concurrent/design/half/sync/async/right/PayServiceImpl.java) 同步执行支付核心逻辑
+3. 支付完成后，创建 [SimpleAsyncTask](concurrent-design-patterns-half-sync-async/src/main/java/com/coderlee/concurrent/design/half/sync/async/right/SimpleAsyncTask.java) 实例异步发送短信
+4. [AsyncTask](concurrent-design-patterns-half-sync-async/src/main/java/com/coderlee/concurrent/design/half/sync/async/right/AsyncTask.java) 框架负责管理线程池并执行异步任务
+5. 客户端无需等待短信发送完成即可获得支付响应
+#### 5. 模式优势与适用场景
+##### 5.1 优势
+- **提高响应性**: 快速响应用户请求，耗时操作后台执行
+- **资源优化**: 合理利用线程资源，避免阻塞主线程
+- **灵活性**: 可以根据不同操作的特点选择同步或异步执行
+- **可扩展性**: 异步任务框架易于扩展和定制
+- **简化编程**: 提供统一的异步任务处理框架
+##### 5.2 适用场景
+- Web应用中需要快速响应用户请求的场景
+- 系统中有混合类型的处理任务（快速响应+耗时操作）
+- 需要提高系统吞吐量和并发处理能力的场合
+- 对用户体验要求较高的交互式应用
+- 需要处理大量I/O操作或外部服务调用的系统
+#### 6. 最佳实践与注意事项
+1. **合理划分同步异步边界**:
+    - 核心业务逻辑和需要强一致性的操作采用同步执行
+    - 通知、日志、统计等非核心操作可采用异步执行
+2. **线程池管理**:
+    - 根据业务特点合理配置线程池大小
+    - 设置合适的队列大小防止内存溢出
+    - 选择适当的拒绝策略处理过载情况
+3. **异常处理**:
+    - 为异步任务提供完善的异常处理机制
+    - 避免异步任务中的异常影响主线程
+4. **资源回收**:
+    - 合理管理线程池生命周期
+    - 在应用关闭时优雅地关闭线程池

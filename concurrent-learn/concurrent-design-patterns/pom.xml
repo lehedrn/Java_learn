@@ -25,6 +25,9 @@
         <module>concurrent-design-patterns-threadlocal</module>
         <module>concurrent-design-patterns-thread-close</module>
         <module>concurrent-design-patterns-master-slave</module>
+        <module>concurrent-design-patterns-pipeline</module>
+        <module>concurrent-design-patterns-pipeline-framework</module>
+        <module>concurrent-design-patterns-half-sync-async</module>
     </modules>
 
     <properties>

@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "AnalysisWrongTest",
+            "request": "launch",
+            "mainClass": "com.coderlee.concurrent.design.pipeline.wrong.AnalysisWrongTest",
+            "projectName": "concurrent-design-patterns-pipeline"
+        },
+        {
+            "type": "java",
             "name": "PromiseWrongTest",
             "request": "launch",
             "mainClass": "com.coderlee.concurrent.design.promise.wrong.PromiseWrongTest",
