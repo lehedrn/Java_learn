@@ -13,3 +13,17 @@
 - [`CompletableFuture` 对 `Future` 的改进](02/CompletableFuture对Future的改进.md)
 - [案例精讲-电商网站的比价](02/案例精讲-电商网站的比价.md)
 - [`CompletableFuture` 常用方法](02/CompletableFuture常用方法.md)
+
+3. `Java` 锁事
+
+- [乐观锁和悲观锁](03/乐观锁和悲观锁.md)
+- [锁相关的8种案例](03/锁相关的8种案例.md)
+- [ `synchronized` 锁](03/synchronized锁.md)
+- [公平锁和非公平锁](03/公平锁和非公平锁.md)
+- [可重入锁(又名递归锁)](03/可重入锁.md)
+- [死锁及排查](03/死锁及排查.md)
+- [ `objectMonitor` 在 `synchronized` 锁中的作用](03/objectMonitor在Synchronized锁中的作用.md)
+- [写锁(独占锁)/读锁(共享锁)]
+- [自旋锁 `SpinLock`]
+- [无锁、独占锁、读写锁、邮戳锁的演变]
+- [无锁、偏向锁、轻量锁、重量锁的演变]
