@@ -1,6 +1,7 @@
 package com.coderlee.juc1.utils;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class SleepUtils {
     /**
@@ -16,6 +17,18 @@ public class SleepUtils {
         } catch (InterruptedException e) {
             // 当线程在睡眠期间被中断时，捕获InterruptedException并重新抛出为RuntimeException
             // 避免强制调用者处理受检异常，同时保证异常不会被忽略
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void sleep(long timeout, Consumer<Void> execeptionCallback) {
+        try {
+            // 使用TimeUnit.MILLISECONDS进行精确的时间控制，使线程睡眠指定毫秒数
+            TimeUnit.MILLISECONDS.sleep(timeout);
+        } catch (InterruptedException e) {
+            // 当线程在睡眠期间被中断时，捕获InterruptedException并重新抛出为RuntimeException
+            // 避免强制调用者处理受检异常，同时保证异常不会被忽略
+            execeptionCallback.accept(null);
             throw new RuntimeException(e);
         }
     }
