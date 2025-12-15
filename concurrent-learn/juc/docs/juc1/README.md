@@ -6,7 +6,7 @@
 - [Java多线程相关概念](01/Java多线程相关概念.md)
 - [用户线程和守护线程](01/用户线程和守护线程.md)
 
-2. CompletableFuture
+2. `CompletableFuture`
 
 - [`Future` 接口理论知识](02/Future接口理论知识.md)
 - [`Future` 接口常用实现类 `FutureTask` 异步任务](02/Future接口常用实现类FutureTask异步任务.md)
@@ -33,3 +33,11 @@
 - [线程中断机制](04/线程中断机制.md)
 - [`LockSupport` 是什么](04/LockSupport.md)
 - [线程等待唤醒机制](04/线程等待唤醒机制.md)
+
+5. `Java` 内存模型 `JMM`
+
+- [计算机硬件存储体系](05/计算机硬件存储体系.md)
+- [`Java` 内存模型 `Java Memory Model`](05/Java内存模型JMM.md)
+- [`JMM` 规范下的三大特性](05/JMM规范下的三大特性.md)
+- [`JMM` 规范下多线程对变量的读写过程](05/JMM规范下多线程对变量的读写过程.md)
+- [`JMM` 规范下多线程先行发生原则之 `happens-before`](05/JMM规范下多线程先行发生原则之happens-before.md)
