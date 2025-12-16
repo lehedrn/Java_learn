@@ -41,3 +41,10 @@
 - [`JMM` 规范下的三大特性](05/JMM规范下的三大特性.md)
 - [`JMM` 规范下多线程对变量的读写过程](05/JMM规范下多线程对变量的读写过程.md)
 - [`JMM` 规范下多线程先行发生原则之 `happens-before`](05/JMM规范下多线程先行发生原则之happens-before.md)
+
+6. `volatile` 与 `JMM`
+
+- [`volatile` 修饰的变量的两大特点](06/volatitle修饰的变量的两大特点.md)
+- [内存屏障](06/内存屏障.md)
+- [`volatile` 特性](06/volatile特性.md)
+- [正确使用 `volatile`]
