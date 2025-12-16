@@ -47,4 +47,4 @@
 - [`volatile` 修饰的变量的两大特点](06/volatitle修饰的变量的两大特点.md)
 - [内存屏障](06/内存屏障.md)
 - [`volatile` 特性](06/volatile特性.md)
-- [正确使用 `volatile`]
+- [正确使用 `volatile`](06/正确使用volatile.md)
