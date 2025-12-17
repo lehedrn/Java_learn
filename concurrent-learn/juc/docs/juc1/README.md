@@ -48,3 +48,10 @@
 - [内存屏障](06/内存屏障.md)
 - [`volatile` 特性](06/volatile特性.md)
 - [正确使用 `volatile`](06/正确使用volatile.md)
+
+7. `CAS`
+
+- [`CAS` 介绍](07/CAS介绍.md)
+- [原子引用](07/原子引用.md)
+- [自旋锁](07/自旋锁.md)
+- [`ABA` 问题](07/ABA问题.md)
