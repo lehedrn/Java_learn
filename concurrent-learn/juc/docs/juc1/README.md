@@ -59,3 +59,7 @@
 8. 原子操作类
 
 - [原子操作类](08/原子操作类.md)
+
+9. `ThreadLocal`
+
+- [`ThreadLocal` 介绍](09/ThreadLocal.md)
