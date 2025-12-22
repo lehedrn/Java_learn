@@ -24,9 +24,9 @@
 - [死锁及排查](03/死锁及排查.md)
 - [ `objectMonitor` 在 `synchronized` 锁中的作用](03/objectMonitor在Synchronized锁中的作用.md)
 - [写锁(独占锁)/读锁(共享锁)]
-- [自旋锁 `SpinLock`]
+- [自旋锁 `SpinLock`](07/自旋锁.md)
 - [无锁、独占锁、读写锁、邮戳锁的演变]
-- [无锁、偏向锁、轻量锁、重量锁的演变]
+- [无锁、偏向锁、轻量锁、重量锁的演变](11/synchronized.md)
 
 4. `LockSupport` 与线程中断
 
@@ -67,3 +67,7 @@
 10. `Java` 对象内存布局和对象头
 
 - [`Java` 对象内存布局和对象头](10/Java对象内存布局和对象头.md)
+
+11. `synchronized`
+
+- [`synchronized` 锁](11/synchronized.md)
