@@ -71,3 +71,7 @@
 11. `synchronized`
 
 - [`synchronized` 锁](11/synchronized.md)
+
+12. `AbstractQueuedSynchronizer`(`AQS`)
+
+- [`AQS` 详解](12/AQS详解.md)
