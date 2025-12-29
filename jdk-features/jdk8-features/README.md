@@ -50,3 +50,5 @@
 - [HashMap 变化](docs/07/04.md)
 
 ## 8. JVM 新特性
+
+- [Java 8 JVM 深度解析](docs/08/01.md)
