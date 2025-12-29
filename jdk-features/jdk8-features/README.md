@@ -23,8 +23,27 @@
 
 ## 4. Steam API
 
+- [Java 8 Stream API：从集合操作到声明式数据处理](docs/04/01.md)
+- [Stream 中间操作深度解析：行为、顺序与性能](docs/04/02.md)
+- [Stream API 中的收集与归约：collect / reduce / Collector 的设计与实践](docs/04/03.md)
+- [并行流（parallelStream）——原理、性能与陷阱](docs/04/04.md)
+- [类型特化 & Optional](docs/04/05.md)
+- [Stream 的底层实现与 JVM 视角](docs/04/06.md)
+
 ## 5. 接口中的默认方法与静态方法
+
+- [接口中的默认方法与静态方法](docs/05/01.md)
 
 ## 6. 新时间日期 API
 
+- [Java 8 新时间日期 API 总览](docs/06/01.md)
+- [时区与偏移处理](docs/06/02.md)
+- [持续时间、周期与日期计算](docs/06/03.md)
+- [格式化、解析与查询](docs/06/04.md)
+- [高级应用、最佳实践与迁移指南](docs/06/05.md)
+
 ## 7. 其他新特性
+
+
+
+## 8. JVM 新特性
