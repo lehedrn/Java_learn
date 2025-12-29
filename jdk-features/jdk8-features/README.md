@@ -44,6 +44,9 @@
 
 ## 7. 其他新特性
 
-
+- [CompletableFuture](docs/07/01.md)
+- [重复注解](docs/07/02.md)
+- [Base64 API](docs/07/03.md)
+- [HashMap 变化](docs/07/04.md)
 
 ## 8. JVM 新特性
