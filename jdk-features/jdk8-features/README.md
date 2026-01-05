@@ -52,3 +52,7 @@
 ## 8. JVM 新特性
 
 - [Java 8 JVM 深度解析](docs/08/01.md)
+
+
+> 参考 [Java平台标准版8文档](https://docs.oracle.com/javase/8/docs/)
+> 参考 [JDK8的新特性](https://www.oracle.com/java/technologies/javase/8-whats-new.html)
