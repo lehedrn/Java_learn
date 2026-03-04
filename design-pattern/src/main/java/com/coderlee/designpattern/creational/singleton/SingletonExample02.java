@@ -3,9 +3,6 @@ package com.coderlee.designpattern.creational.singleton;
 import com.coderlee.designpattern.creational.singleton.supports.SingletonTestUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 /**
  * 单例模式示例 02 - 静态代码块实现（饿汉式变体）
  * <p>

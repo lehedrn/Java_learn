@@ -3,9 +3,6 @@ package com.coderlee.designpattern.creational.singleton;
 import com.coderlee.designpattern.creational.singleton.supports.SingletonTestUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 /**
  * 单例模式示例 01 - 饿汉式实现（静态常量式）
  * <p>
@@ -19,7 +16,7 @@ import java.lang.reflect.InvocationTargetException;
  * @version 1.0
  */
 @Slf4j
-public class SingletonExample01 {
+public class SingletonExample01 /*implements Serializable*/ {
     /**
      * 私有构造函数，防止外部通过 new 关键字创建实例
      * 这是单例模式的核心要素之一
@@ -86,5 +83,8 @@ public class SingletonExample01 {
             throw new RuntimeException(e);
         }*/
         SingletonTestUtil.testReflection(SingletonExample01.class.getSimpleName(), SingletonExample01.class, SingletonExample01::getInstance);
+        // 验证序列化破坏单例模式，需要将单例实现 Serializable 接口
+//        SingletonTestUtil.testSerialization(SingletonExample01.class.getSimpleName(), SingletonExample01::getInstance);
+//        SingletonTestUtil.testClone(SingletonExample01.class.getSimpleName(), SingletonExample01::getInstance);
     }
 }
