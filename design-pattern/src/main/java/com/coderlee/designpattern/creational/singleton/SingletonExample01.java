@@ -86,5 +86,6 @@ public class SingletonExample01 /*implements Serializable*/ {
         // 验证序列化破坏单例模式，需要将单例实现 Serializable 接口
 //        SingletonTestUtil.testSerialization(SingletonExample01.class.getSimpleName(), SingletonExample01::getInstance);
 //        SingletonTestUtil.testClone(SingletonExample01.class.getSimpleName(), SingletonExample01::getInstance);
+        SingletonTestUtil.testThreadSingleton(SingletonExample01.class.getSimpleName(), SingletonExample01::getInstance);
     }
 }

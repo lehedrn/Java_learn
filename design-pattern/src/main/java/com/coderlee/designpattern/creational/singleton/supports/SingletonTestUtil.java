@@ -1,5 +1,6 @@
 package com.coderlee.designpattern.creational.singleton.supports;
 
+import com.coderlee.designpattern.creational.singleton.SingletonExample01;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -275,4 +276,31 @@ public class SingletonTestUtil {
             throw new RuntimeException("线程安全测试失败", e);
         }
     }
+
+    public static<T> void testThreadSingleton(String singletonName, Supplier<T> supplier) {
+        log.info("========== 验证 {} 的线程单例性 ==========", singletonName);
+        int threadCount = 5;
+        Set<T> instances = ConcurrentHashMap.newKeySet();
+        CountDownLatch latch = new CountDownLatch(threadCount);
+        for (int i = 0; i < threadCount; i++) {
+            new Thread(() -> {
+                T instance = supplier.get();
+                instances.add(instance);
+                log.info("{} -> {}", Thread.currentThread().getName(), instance.hashCode());
+                latch.countDown();
+            }, "t" + (i+1)).start();
+        }
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("线程中断：{}", e.getMessage());
+        }
+        if (instances.size() == threadCount) {
+            log.info(" {} 是线程间单例！", singletonName);
+        } else if (instances.size() == 1) {
+            log.info(" {} 是进程内单例！", singletonName);
+        }
+    }
+
 }
