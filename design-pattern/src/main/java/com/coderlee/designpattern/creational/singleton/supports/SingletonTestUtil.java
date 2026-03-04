@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Supplier;
 
 /**
@@ -78,7 +81,12 @@ public class SingletonTestUtil {
 
         try {
             // 获取私有的构造函数
-            Constructor<T> declaredConstructor = singletonClass.getDeclaredConstructor();
+            Constructor<T> declaredConstructor = null;
+            if (supplier.get().getClass().isEnum()) {
+                declaredConstructor = singletonClass.getDeclaredConstructor(String.class, int.class);
+            } else {
+                declaredConstructor = singletonClass.getDeclaredConstructor();
+            }
             // 暴力反射：设置私有构造函数可访问
             declaredConstructor.setAccessible(true);
             // 通过反射创建新实例
@@ -198,4 +206,73 @@ public class SingletonTestUtil {
         }
     }
 
+    /**
+     * 测试单例模式的线程安全性
+     * <p>
+     * 通过创建大量并发线程同时调用 getInstance() 方法，
+     * 验证是否会创建多个实例。
+     * </p>
+     *
+     * @param singletonName 单例类的名称，用于日志输出
+     * @param supplier 获取单例实例的 Supplier 函数式接口
+     * @param <T> 泛型类型参数，表示单例对象的类型
+     */
+    public static<T> void testSingletonThreadSafety(String singletonName, Supplier<T> supplier) {
+        log.info("========== 测试 {} 的线程安全性 ==========", singletonName);
+        
+        try {
+            // 使用 ConcurrentHashMap.newKeySet() 保证线程安全的集合操作
+            Set<T> instances = ConcurrentHashMap.newKeySet();
+            
+            // 定义线程数量：10000 个线程足够验证并发问题
+            // 1. 系统资源耗尽
+            // 2. 测试执行缓慢
+            // 3. 线程调度开销大
+            final int THREAD_COUNT = 1000;
+            
+            // CountDownLatch 用于同步等待所有线程执行完成
+            CountDownLatch latch = new CountDownLatch(THREAD_COUNT);
+            
+            log.info("启动 {} 个线程并发测试...", THREAD_COUNT);
+            
+            // 创建并启动线程
+            for (int i = 0; i < THREAD_COUNT; i++) {
+                new Thread(() -> {
+                    try {
+                        // 获取单例实例并添加到集合中（自动去重）
+                        T instance = supplier.get();
+                        instances.add(instance);
+                    } finally {
+                        // 确保计数，即使发生异常
+                        latch.countDown();
+                    }
+                }).start();
+            }
+            
+            // 等待所有线程执行完成
+            latch.await();
+            
+            // 统计创建的实例数量
+            int uniqueInstanceCount = instances.size();
+            
+            log.info("实际创建的唯一定义数量：{}", uniqueInstanceCount);
+            
+            // 判断是否线程安全
+            if (uniqueInstanceCount != 1) {
+                log.warn("⚠️  单例类 {} 不是线程安全的！创建了 {} 个不同实例", 
+                    singletonName, uniqueInstanceCount);
+            } else {
+                log.info("✅ {} 线程安全！所有线程都获取到同一个实例", singletonName);
+            }
+            
+        } catch (InterruptedException e) {
+            // 恢复中断状态
+            Thread.currentThread().interrupt();
+            log.error("❌ 线程安全测试被中断：{}", e.getMessage());
+            throw new RuntimeException("线程安全测试失败", e);
+        } catch (Exception e) {
+            log.error("❌ 线程安全测试异常：{}", e.getMessage(), e);
+            throw new RuntimeException("线程安全测试失败", e);
+        }
+    }
 }
