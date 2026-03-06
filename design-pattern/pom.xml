@@ -20,8 +20,9 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <lombok.version>1.18.38</lombok.version>
-        <logback-classic.version>1.5.19</logback-classic.version>
+        <logback-classic.version>1.5.25</logback-classic.version>
         <slf4j-api.version>2.0.13</slf4j-api.version>
+        <cglib.version>3.3.0</cglib.version>
 
         <maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
         <flatten-maven-plugin.version>1.3.0</flatten-maven-plugin.version>
@@ -45,6 +46,11 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j-api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${cglib.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -60,6 +66,12 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- CGLIB 动态代理核心依赖 -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
         </dependency>
     </dependencies>
 
