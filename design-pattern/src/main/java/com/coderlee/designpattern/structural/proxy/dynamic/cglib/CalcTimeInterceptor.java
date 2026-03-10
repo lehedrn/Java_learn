@@ -1,4 +1,4 @@
-package com.coderlee.designpattern.behavioral.proxy.dynamic.cglib;
+package com.coderlee.designpattern.structural.proxy.dynamic.cglib;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.proxy.MethodInterceptor;

@@ -1,4 +1,4 @@
-package com.coderlee.designpattern.behavioral.brige;
+package com.coderlee.designpattern.structural.brige;
 
 /**
  * 紧急消息类（具体抽象化角色）

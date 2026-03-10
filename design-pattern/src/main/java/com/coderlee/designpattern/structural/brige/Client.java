@@ -1,4 +1,4 @@
-package com.coderlee.designpattern.behavioral.brige;
+package com.coderlee.designpattern.structural.brige;
 
 /**
  * 桥接模式客户端测试类

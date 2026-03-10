@@ -1,4 +1,4 @@
-package com.coderlee.designpattern.behavioral.brige;
+package com.coderlee.designpattern.structural.brige;
 
 import lombok.extern.slf4j.Slf4j;
 

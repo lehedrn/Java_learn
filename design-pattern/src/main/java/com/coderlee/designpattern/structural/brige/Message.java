@@ -1,4 +1,4 @@
-package com.coderlee.designpattern.behavioral.brige;
+package com.coderlee.designpattern.structural.brige;
 
 /**
  * 消息抽象类（抽象化角色）

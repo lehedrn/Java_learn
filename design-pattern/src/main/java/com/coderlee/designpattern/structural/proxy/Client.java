@@ -1,9 +1,9 @@
-package com.coderlee.designpattern.behavioral.proxy;
+package com.coderlee.designpattern.structural.proxy;
 
-import com.coderlee.designpattern.behavioral.proxy.dynamic.cglib.CglibProxyFactory;
-import com.coderlee.designpattern.behavioral.proxy.dynamic.cglib.UserDao;
-import com.coderlee.designpattern.behavioral.proxy.dynamic.jdk.JDKProxyFactory;
-import com.coderlee.designpattern.behavioral.proxy.staticproxy.UserServiceProxy;
+import com.coderlee.designpattern.structural.proxy.dynamic.cglib.CglibProxyFactory;
+import com.coderlee.designpattern.structural.proxy.dynamic.cglib.UserDao;
+import com.coderlee.designpattern.structural.proxy.dynamic.jdk.JDKProxyFactory;
+import com.coderlee.designpattern.structural.proxy.staticproxy.UserServiceProxy;
 import lombok.extern.slf4j.Slf4j;
 
 /**

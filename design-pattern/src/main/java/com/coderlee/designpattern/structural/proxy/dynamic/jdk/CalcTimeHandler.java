@@ -1,4 +1,4 @@
-package com.coderlee.designpattern.behavioral.proxy.dynamic.jdk;
+package com.coderlee.designpattern.structural.proxy.dynamic.jdk;
 
 import lombok.extern.slf4j.Slf4j;
 

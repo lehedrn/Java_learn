@@ -1,6 +1,6 @@
-package com.coderlee.designpattern.behavioral.proxy.dynamic.cglib;
+package com.coderlee.designpattern.structural.proxy.dynamic.cglib;
 
-import com.coderlee.designpattern.behavioral.proxy.User;
+import com.coderlee.designpattern.structural.proxy.User;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;

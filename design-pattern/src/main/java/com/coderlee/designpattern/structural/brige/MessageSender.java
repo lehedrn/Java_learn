@@ -1,4 +1,4 @@
-package com.coderlee.designpattern.behavioral.brige;
+package com.coderlee.designpattern.structural.brige;
 
 /**
  * 消息发送器接口（实现化角色）

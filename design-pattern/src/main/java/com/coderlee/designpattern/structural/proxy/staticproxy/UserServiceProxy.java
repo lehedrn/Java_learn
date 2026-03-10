@@ -1,7 +1,7 @@
-package com.coderlee.designpattern.behavioral.proxy.staticproxy;
+package com.coderlee.designpattern.structural.proxy.staticproxy;
 
-import com.coderlee.designpattern.behavioral.proxy.User;
-import com.coderlee.designpattern.behavioral.proxy.UserService;
+import com.coderlee.designpattern.structural.proxy.User;
+import com.coderlee.designpattern.structural.proxy.UserService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;

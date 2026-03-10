@@ -1,4 +1,4 @@
-package com.coderlee.designpattern.behavioral.proxy;
+package com.coderlee.designpattern.structural.proxy;
 
 /**
  * 用户服务接口
