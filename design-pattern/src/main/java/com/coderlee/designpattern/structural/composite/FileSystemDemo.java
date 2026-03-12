@@ -22,7 +22,6 @@ public class FileSystemDemo {
         Folder root = new Folder("根目录");
         Folder workFolder = new Folder("工作文档");
         Folder personalFolder = new Folder("个人资料");
-        Folder codeFolder = new Folder("代码项目");
         Folder projectFolder = new Folder("项目 A");
 
         // 构建目录树
